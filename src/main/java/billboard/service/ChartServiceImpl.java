@@ -23,7 +23,7 @@ public class ChartServiceImpl extends ChartGrpc.ChartImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = """
           select zhiwei, count(zhiwei) as count
           from (select qiwangzhiwei as zhiwei from resume where qiwanghangye != '' and  qiwangzhiwei != '' ) as t
@@ -33,7 +33,7 @@ public class ChartServiceImpl extends ChartGrpc.ChartImplBase {
           """;
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {

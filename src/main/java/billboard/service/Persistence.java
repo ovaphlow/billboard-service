@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DBUtil {
+public class Persistence {
   private static final HikariDataSource ds;
 
   static {

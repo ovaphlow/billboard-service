@@ -22,12 +22,12 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from delivery where id = ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           resp.put("content", false);
         } else {
@@ -49,7 +49,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select d.status,r.education, r.uuid, "
       +"r.name as name, r.school,d.datime, d.id, d.recruitment_id, d.resume_id "
       +"from delivery d left join resume r on d.resume_id = r.id" +
@@ -58,7 +58,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
         ps.setInt(1, req.getRecruitmentId());
         ps.setString(2, req.getRecruitmentUuid());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -76,7 +76,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn();) {
+    try (Connection conn = Persistence.getConn();) {
       String sql = "select d.*,r.name as recruitment_name,re.common_user_id,re.name,"
           + "  re.phone,re.email,re.gender, re.birthday,re.school,re.education,"
           + "  re.date_begin,re.date_end,re.major,re.qiwangzhiwei,re.qiwanghangye,"
@@ -87,7 +87,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
         ps.setInt(1, req.getId());
         ps.setString(2, req.getUuid());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           resp.put("content", false);
         } else {
@@ -109,14 +109,14 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select r.*, d.status, d.datime from delivery d  join "
           + "    recruitment r on d.recruitment_id = r.id  where "
           + "     (select re.id from resume re where re.common_user_id= ? limit 1) = d.resume_id";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getCommonUserId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -134,14 +134,14 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from delivery"
           + " where resume_id = (select id from resume where common_user_id = ? limit 1 )" + " and recruitment_id=?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getCommonUserId());
         ps.setInt(2, req.getRecruitmentId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           resp.put("content", false);
         } else {
@@ -163,7 +163,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "insert into delivery (resume_id, resume_uuid, recruitment_id, recruitment_uuid, datime)"
           + " value ( (select id from resume where common_user_id = ? limit 1),"
           + "(select uuid from resume where common_user_id = ? limit 1),?,?,?)";
@@ -191,7 +191,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select re.name as recruitment_name, re.industry, d.status,"
           + "r.education, r.uuid, r.name as name, r.school,d.datime,  d.id, d.recruitment_id, d.resume_id "
           + "from delivery d left join resume r on d.resume_id = r.id left join recruitment re on d.recruitment_id = re.id "
@@ -230,7 +230,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
           ps.setString(inx + 1, list.get(inx));
         }
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -248,7 +248,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "update delivery set status = ? where id = ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getStatus());

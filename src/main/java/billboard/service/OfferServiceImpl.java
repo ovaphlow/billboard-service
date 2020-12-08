@@ -24,14 +24,14 @@ public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select o.*, re.name as user_name, r.name as recruitment_name from offer o"
           + " left join recruitment r on o.recruitment_id = r.id left join resume re on o.common_user_id = re.common_user_id"
           + " where r.enterprise_id = ? ORDER BY datime DESC";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -49,7 +49,7 @@ public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       List<Map<String, Object>> result = new ArrayList<>();
       String sql = "select o.*, en.name as enterprise_name, r.name as recruitment_name from offer o"
           + " left join recruitment r on o.recruitment_id = r.id left join enterprise en on en.id = r.enterprise_id"
@@ -57,7 +57,7 @@ public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ResultSet rs = ps.executeQuery();
-        result = DBUtil.getList(rs);
+        result = Persistence.getList(rs);
       }
       sql = "update offer set status='已读' where common_user_id = ? and status='未读'";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -80,12 +80,12 @@ public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select count(*) as total from offer where common_user_id = ? and status = '未读'";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result.get(0).get("total"));
       }
     } catch (Exception e) {
@@ -103,7 +103,7 @@ public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "insert into offer (recruitment_id, common_user_id, address, mianshishijian, luxian, remark, phone1, phone2, datime) value (?,?,?,?,?,?,?,?,?)";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getRecruitmentId());

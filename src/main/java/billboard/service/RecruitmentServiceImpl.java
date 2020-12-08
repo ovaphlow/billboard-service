@@ -26,11 +26,11 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from recruitment limit 200";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -52,12 +52,12 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
   @Override
   public void filter(RecruitmentProto.FilterRequest req, StreamObserver<RecruitmentProto.Reply> responseObserver) {
     String resp = "[]";
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       if ("".equals(req.getCategory())) {
         String sql = "select * from recruitment where status = '在招' order by id desc limit 200";
         PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp = new Gson().toJson(result);
       } else if ("byCategory".equals(req.getCategory())) {
         String sql = "select * "
@@ -69,7 +69,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, req.getFilterMap().get("category"));
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp = new Gson().toJson(result);
       }
     } catch (Exception e) {
@@ -86,7 +86,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String uuid = UUID.randomUUID().toString();
       String sql = "insert into recruitment ( enterprise_id, enterprise_uuid, name, qty, description, requirement,"
           + "address1, address2, address3, date, salary1, salary2, education, category,"
@@ -130,7 +130,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "update recruitment set name = ?, qty = ?, description = ?,"
           + "requirement = ?, address1 = ?, address2 = ?, address3 = ?, salary1 = ?,"
           + "salary2 = ?, education = ?, category = ?,  industry = ?, position = ? where id = ? and uuid = ?";
@@ -168,7 +168,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "update recruitment set status = ? where id = ? and uuid=?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getStatus());
@@ -192,7 +192,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = """
           select r.*, e.name as enterprise_name, e.uuid as enterprise_uuid, u.id as ent_user_id
           from recruitment r left join enterprise e on e.id=r.enterprise_id
@@ -203,7 +203,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         ps.setInt(1, req.getId());
         ps.setString(2, req.getUuid());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           resp.put("content", false);
         } else {
@@ -225,7 +225,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select id, enterprise_id, enterprise_uuid, name, qty, address1, address2, address3, date, " +
           " salary1, salary2,education, category, status, industry, position, uuid " +
           "from recruitment " +
@@ -269,7 +269,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
           ps.setString(inx + 1, list.get(inx));
         }
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -288,7 +288,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * " +
           "from recruitment " +
           "where status='在招' " +
@@ -333,7 +333,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
           ps.setString(inx + 1, list.get(inx));
         }
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -351,7 +351,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * " +
           "from recruitment " +
           "where enterprise_id = ? " +
@@ -363,7 +363,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         ps.setInt(1, req.getId());
         ps.setString(2, req.getUuid());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -381,7 +381,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select id, enterprise_id, enterprise_uuid, name, qty, address1, address2, address3, " +
           "date, salary1, salary2, education, category, status, industry, position, uuid, job_fair_id, " +
           "(select count(*) from browse_journal where data_id = recruitment.id and data_uuid = recruitment.uuid) as journal, " +
@@ -417,7 +417,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
           ps.setString(inx + 1, list.get(inx));
         }
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -435,7 +435,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * " +
           "from recruitment " +
           "where enterprise_id in (select id from enterprise where subject = ?) " +
@@ -444,7 +444,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getSubject());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -462,7 +462,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql =
           "select * from recruitment " +
               "where json_search(job_fair_id, \"one\", ?) " +
@@ -472,7 +472,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         ps.setInt(2, req.getEntId());
         ps.setString(3, req.getEntUuid());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -490,12 +490,12 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from recruitment where json_search(job_fair_id, \"one\", ?)";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getJobFairId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {

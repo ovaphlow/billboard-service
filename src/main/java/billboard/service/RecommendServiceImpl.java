@@ -21,7 +21,7 @@ class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select id, uuid, category, title,  address_level1, address_level2, publisher, qty from recommend where now() between date1 and date2 ";
       List<String> list = new ArrayList<>();
       boolean flg = false;
@@ -71,7 +71,7 @@ class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
           ps.setString(inx + 1, list.get(inx));
         }
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -89,13 +89,13 @@ class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from recommend where id = ? and uuid = ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ps.setString(2, req.getUuid());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result.get(0));
       }
     } catch (Exception e) {

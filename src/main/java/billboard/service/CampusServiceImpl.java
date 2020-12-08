@@ -1,14 +1,15 @@
 package billboard.service;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.MapHandler;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,28 +18,24 @@ public class CampusServiceImpl extends CampusGrpc.CampusImplBase {
 
   @Override
   public void get(CampusProto.GetRequest req, StreamObserver<CampusProto.Reply> responseObserver) {
-    Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from campus where id = ? and uuid = ? ";
-      try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, req.getId());
-        ps.setString(2, req.getUuid());
-        ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
-        if (result.size() > 0) {
-          resp.put("content", result.get(0));
-        } else {
-          resp.put("message", "该信息已失效");
-        }
-      }
+      Map<String, Object> result = new QueryRunner().query(conn, sql,
+          new MapHandler(),
+          req.getId(),
+          req.getUuid());
+      resp.put("content", result);
     } catch (Exception e) {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    CampusProto.Reply reply = CampusProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    CampusProto.Reply reply = CampusProto.Reply
+        .newBuilder()
+        .setData(new Gson().toJson(resp))
+        .build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
@@ -49,7 +46,7 @@ public class CampusServiceImpl extends CampusGrpc.CampusImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection cnx = DBUtil.getConn()) {
+    try (Connection cnx = Persistence.getConn()) {
       String sql = """
         select id, uuid, title, address_level3, address_level2, date, school, category
         from campus
@@ -60,16 +57,13 @@ public class CampusServiceImpl extends CampusGrpc.CampusImplBase {
         order by date
         limit 200
         """;
-      PreparedStatement pstmt = cnx.prepareStatement(sql);
-      pstmt.setString(1, req.getFilterMap().get("city"));
-      pstmt.setString(2,
-          Boolean.parseBoolean(req.getFilterMap().get("category1")) ? "宣讲会" : "");
-      pstmt.setString(3,
-          Boolean.parseBoolean(req.getFilterMap().get("category2")) ? "双选会" : "");
-      pstmt.setString(4, req.getFilterMap().get("keyword"));
-      pstmt.setString(5, req.getFilterMap().get("keyword"));
-      ResultSet rs = pstmt.executeQuery();
-      List<Map<String, Object>> result = DBUtil.getList(rs);
+      List<Map<String, Object>> result = new QueryRunner().query(cnx, sql,
+          new MapListHandler(),
+          req.getFilterMap().get("city"),
+          Boolean.parseBoolean(req.getFilterMap().get("category1")) ? "宣讲会" : "",
+          Boolean.parseBoolean(req.getFilterMap().get("category2")) ? "双选会" : "",
+          req.getFilterMap().get("keyword"),
+          req.getFilterMap().get("keyword"));
       resp.put("content", result);
     } catch (Exception e) {
       logger.error("", e);

@@ -19,11 +19,11 @@ public class DemoServiceImpl extends DemoGrpc.DemoImplBase {
   public void test(DemoProto.DemoRequest req, StreamObserver<DemoProto.DemoReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "show tables";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {

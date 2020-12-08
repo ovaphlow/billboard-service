@@ -1,14 +1,15 @@
 package billboard.service;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import com.google.gson.Gson;
 
 import io.grpc.stub.StreamObserver;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.MapHandler;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,11 +18,10 @@ public class BannerServiceImpl extends BannerGrpc.BannerImplBase {
 
   @Override
   public void get(BannerProto.GetRequest req, StreamObserver<BannerProto.Reply> responseObserver) {
-    Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = """
         select id, uuid, datime, data_url, source_url, category
         from banner
@@ -29,44 +29,44 @@ public class BannerServiceImpl extends BannerGrpc.BannerImplBase {
           and status = '启用'
         ORDER BY datime DESC
         """;
-      try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setString(1, req.getCategory());
-        ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
-        resp.put("content", result);
-      }
+      List<Map<String, Object>> result = new QueryRunner().query(conn, sql,
+          new MapListHandler(),
+          req.getCategory());
+      resp.put("content", result);
     } catch (Exception e) {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    responseObserver.onNext(BannerProto.Reply.newBuilder().setData(gson.toJson(resp)).build());
+    BannerProto.Reply reply = BannerProto.Reply
+        .newBuilder()
+        .setData(new Gson().toJson(resp))
+        .build();
+    responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void detail(BannerProto.DetailRequest req, StreamObserver<BannerProto.Reply> responseObserver) {
-    Gson gson = new Gson();
+  public void detail(BannerProto.DetailRequest req,
+      StreamObserver<BannerProto.Reply> responseObserver) {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from banner where id = ? and uuid = ?";
-      try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, req.getId());
-        ps.setString(2, req.getUuid());
-        ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
-        if (result.size() == 0) {
-          resp.put("message", "未找到该内容");
-        } else {
-          resp.put("content", result.get(0));
-        }
-      }
+      Map<String, Object> result = new QueryRunner().query(conn, sql,
+          new MapHandler(),
+          req.getId(),
+          req.getUuid());
+      resp.put("content", result);
     } catch (Exception e) {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    responseObserver.onNext(BannerProto.Reply.newBuilder().setData(gson.toJson(resp)).build());
+    BannerProto.Reply reply = BannerProto.Reply
+        .newBuilder()
+        .setData(new Gson().toJson(resp))
+        .build();
+    responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 }

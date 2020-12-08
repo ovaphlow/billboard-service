@@ -24,7 +24,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select r.id, r.uuid, r.name, r.address1, r.address2, r.address3, r.qty, r.salary1, r.salary2, r.date, t.category2,(select name from enterprise where id = r.id)\n"
           + "as enterprise_name from (select data_id, category2 from favorite where category1 = ? and category2 = '岗位'  and user_id =?) as t  join recruitment as r on data_id = r.id\n"
           + "union\n"
@@ -41,7 +41,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
         ps.setString(5, req.getCategory1());
         ps.setInt(6, req.getUserId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -59,7 +59,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from favorite where user_id = ? and data_id = ? and category1 = ? and category2 = ? limit 1";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getUserId());
@@ -67,7 +67,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
         ps.setString(3, req.getCategory1());
         ps.setString(4, req.getCategory2());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           resp.put("content", false);
         } else {
@@ -89,7 +89,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select f.id, r.id as resume_id, r.uuid, r.name, r.education, r.school,"
           + "r.yixiangchengshi, r.qiwanghangye,  r.qiwangzhiwei from "
           + "favorite f left join resume r on f.data_id = r.id "
@@ -121,7 +121,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
           ps.setString(inx + 1, list.get(inx));
         }
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -139,7 +139,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "delete from favorite where id = ? limit 1";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
@@ -161,7 +161,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "insert into favorite (user_id, user_uuid, data_id, data_uuid, category1, category2, datime) value (?, ?, ?, ?, ?, ?, ?)";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getUserId());

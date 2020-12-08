@@ -21,7 +21,7 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select e.*,u.id as ent_user_id from enterprise e "
           + "left join enterprise_user u on e.id = u.enterprise_id  where e.id = ? and (u.uuid=? or e.uuid=?)  ";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -29,7 +29,7 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
         ps.setString(2, req.getUuid());
         ps.setString(3, req.getUuid());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           resp.put("message", "该企业已不存在");
         } else {
@@ -51,13 +51,13 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select status from enterprise where id = ? and uuid = ?  and status = '认证'";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ps.setString(2, req.getUuid());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           resp.put("content", false);
         } else {
@@ -79,7 +79,7 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "update enterprise set yingyezhizhao = ?, faren= ?, zhuceriqi= ?, zhuziguimo= ?, "
           + "yuangongshuliang= ?, yingyezhizhao_tu= ?, phone=?, address1= ?, address2= ?, address3= ?, "+
           " address4= ?, industry= ?, intro= ?, url= ? where id=? and uuid=?";
@@ -119,11 +119,11 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
     resp.put("message", "");
     resp.put("content", "");
     String sql = "select id,uuid,name from enterprise where subject = ?";
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       try(PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getName());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -141,7 +141,7 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql =
       "select id, uuid, status, name, yingyezhizhao, phone, "+
       "faren, zhuceriqi, zhuziguimo, yuangongshuliang, address1, "+
@@ -152,7 +152,7 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getJobFairId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {

@@ -22,13 +22,13 @@ public class CommonUserFileServiceImpl extends CommonUserFileGrpc.CommonUserFile
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from  common_user_file where common_user_id = ? and category = ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getCommonUserId());
         ps.setString(2, req.getCategory());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -46,7 +46,7 @@ public class CommonUserFileServiceImpl extends CommonUserFileGrpc.CommonUserFile
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "delete from common_user_file where id = ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
@@ -68,7 +68,7 @@ public class CommonUserFileServiceImpl extends CommonUserFileGrpc.CommonUserFile
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "insert  into common_user_file (file, common_user_id, category) value (?,?,?)";
       try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         ps.setString(1, req.getFile());

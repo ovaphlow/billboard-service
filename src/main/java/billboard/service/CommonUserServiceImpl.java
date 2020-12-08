@@ -24,13 +24,13 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select phone,name,id,uuid,email from common_user where id = ? and uuid = ? ";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getId());
         ps.setString(2, req.getUuid());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result.get(0));
       }
     } catch (Exception e) {
@@ -48,7 +48,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       Map<String, String> err = new HashMap<>();
       String sql = "select * from captcha where user_category='个人用户' and code=? and email=? "
           + "and str_to_date(datime,'%Y-%m-%d %H:%i:%s') >= now()-interval 10 minute ORDER BY datime DESC limit 1";
@@ -56,7 +56,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
         ps.setString(1, req.getCode());
         ps.setString(2, req.getEmail());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           err.put("code", "0");
         }
@@ -70,7 +70,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
           ps.setString(1, req.getEmail());
           ps.setString(2, req.getName());
           ResultSet rs = ps.executeQuery();
-          List<Map<String, Object>> result = DBUtil.getList(rs);
+          List<Map<String, Object>> result = Persistence.getList(rs);
           result.get(0).forEach((k, v) -> {
             if (!"0".equals(v.toString())) {
               err.put(k, v.toString());
@@ -112,14 +112,14 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select phone,name,id,uuid,email,salt,password from common_user where (phone = ? or email = ?)";
       List<Map<String, Object>> result = new ArrayList<>();
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getPhoneEmail());
         ps.setString(2, req.getPhoneEmail());
         ResultSet rs = ps.executeQuery();
-        result = DBUtil.getList(rs);
+        result = Persistence.getList(rs);
       }
 
       if (result.size() == 0) {
@@ -152,7 +152,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       Map<String, String> err = new HashMap<>();
       String sql = "select * from captcha where user_category=? and code=? and email=? "
           + "and str_to_date(datime,'%Y-%m-%d %H:%i:%s') >= now()-interval 10 minute ORDER BY datime DESC limit 1";
@@ -162,7 +162,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
         ps.setString(2, req.getCode());
         ps.setString(3, req.getEmail());
         ResultSet rs = ps.executeQuery();
-        result = DBUtil.getList(rs);
+        result = Persistence.getList(rs);
       }
       if (result.size() == 0) {
         resp.put("message", "验证码错误!");
@@ -178,7 +178,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
           ps.setString(5, req.getPhone());
           ps.setInt(6, req.getId());
           ResultSet rs = ps.executeQuery();
-          result = DBUtil.getList(rs);
+          result = Persistence.getList(rs);
           result.get(0).forEach((k, v) -> {
             if (!"0".equals(v.toString())) {
               err.put(k, v.toString());
@@ -221,13 +221,13 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       List<Map<String, Object>> result = new ArrayList<>();
       String sql = "select * from common_user where phone=?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getPhone());
         ResultSet rs = ps.executeQuery();
-        result = DBUtil.getList(rs);
+        result = Persistence.getList(rs);
       }
       if (result.size() != 0) {
         resp.put("message", "该电话号已使用");
@@ -255,13 +255,13 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from  login_journal where user_id = ? and category = ? ORDER BY datime DESC ";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getUserId());
         ps.setString(2, req.getCategory());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -279,7 +279,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from captcha where user_category=? and code=? and email=? "
           + "and str_to_date(datime,'%Y-%m-%d %H:%i:%s') >= now()-interval 10 minute ORDER BY datime DESC limit 1";
       Map<String, String> err = new HashMap<>();
@@ -288,7 +288,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
         ps.setString(2, req.getCode());
         ps.setString(3, req.getEmail());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           err.put("code", "0");
         }
@@ -328,13 +328,13 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from common_user where email = ? and id != ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getEmail());
         ps.setInt(2, req.getId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() != 0) {
           resp.put("message", "该邮箱已被使用!");
         } else {
@@ -357,12 +357,12 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from common_user where email = ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getEmail());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           resp.put("message", "该邮箱不存在!");
         } else {
@@ -385,13 +385,13 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
       Map<String, Object> resp = new HashMap<>();
       resp.put("message", "");
       resp.put("content", "");
-      try (Connection conn = DBUtil.getConn()) {
+      try (Connection conn = Persistence.getConn()) {
         String sql = "select salt,password from common_user where id = ? and uuid = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
           ps.setInt(1, req.getId());
           ps.setString(2, req.getUuid());
           ResultSet rs = ps.executeQuery();
-          List<Map<String, Object>> result = DBUtil.getList(rs);
+          List<Map<String, Object>> result = Persistence.getList(rs);
           resp.put("content", result.get(0));
         }
       } catch (Exception e) {
@@ -410,7 +410,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
       Map<String, Object> resp = new HashMap<>();
       resp.put("message", "");
       resp.put("content", "");
-      try (Connection conn = DBUtil.getConn()) {
+      try (Connection conn = Persistence.getConn()) {
         String sql = "select * from captcha where user_category=? and code=? and email= ? "
         + "and str_to_date(datime,'%Y-%m-%d %H:%i:%s') >= now()-interval 10 minute ORDER BY datime DESC limit 1";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -418,7 +418,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
           ps.setString(2, req.getCode());
           ps.setString(3, req.getEmail());
           ResultSet rs = ps.executeQuery();
-          List<Map<String, Object>> result = DBUtil.getList(rs);
+          List<Map<String, Object>> result = Persistence.getList(rs);
           resp.put("content", result.size() != 0);
         }
       } catch (Exception e) {
@@ -437,7 +437,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
       Map<String, Object> resp = new HashMap<>();
       resp.put("message", "");
       resp.put("content", "");
-      try (Connection conn = DBUtil.getConn()) {
+      try (Connection conn = Persistence.getConn()) {
         String sql = "update common_user set password = ?, salt = ? where id = ? and uuid = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
           ps.setString(1, req.getPassword());

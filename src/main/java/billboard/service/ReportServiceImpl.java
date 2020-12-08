@@ -21,7 +21,7 @@ public class ReportServiceImpl extends ReportGrpc.ReportImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "insert into report (user_id, user_uuid, user_category, data_id, data_uuid, category, content, datime)  value (?, ?, ?, ?, ?, ?, ?, ?)";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getUserId());
@@ -50,7 +50,7 @@ public class ReportServiceImpl extends ReportGrpc.ReportImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select*, (case category " + "    when '岗位' then (select name from recruitment where id = data_id) "
           + " when '企业' then  (select name from enterprise where id = data_id) "
           + " when '简历' then (select name from resume where id = data_id) "
@@ -59,7 +59,7 @@ public class ReportServiceImpl extends ReportGrpc.ReportImplBase {
         ps.setInt(1, req.getUserId());
         ps.setString(2, req.getUserCategory());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {

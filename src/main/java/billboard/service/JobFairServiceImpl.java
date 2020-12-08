@@ -22,13 +22,13 @@ public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql =
         " select * from job_fair as j "
       + " where status = '启用' order by datime desc ";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -47,12 +47,12 @@ public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from job_fair where  id = ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           resp.put("message", "该招聘会已不存在");
         } else {
@@ -74,7 +74,7 @@ public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select *,"
           + " (select count(*) from recruitment "
           + " where json_search(job_fair_id, \"one\", j.id) and enterprise_id = ? and enterprise_uuid = ?) as qty"
@@ -83,7 +83,7 @@ public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
         ps.setInt(1, req.getEntId());
         ps.setString(2, req.getEntUuid());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -101,7 +101,7 @@ public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String cleanSql =
       " update recruitment " +
       " set job_fair_id = json_remove(job_fair_id,replace(JSON_SEARCH(job_fair_id,'one',concat(?,'')) ,'\"',''))" +

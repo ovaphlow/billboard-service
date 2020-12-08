@@ -24,7 +24,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "insert into message (common_user_id, ent_user_id, content, datime, category) value (?,?,?,?,?)";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getCommonUserId());
@@ -50,14 +50,14 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       List<Map<String, Object>> result = new ArrayList<>();
       String sql = "select * from message where common_user_id = ? and ent_user_id = ? ORDER BY datime;";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getCommonUserId());
         ps.setInt(2, req.getEntUserId());
         ResultSet rs = ps.executeQuery();
-        result = DBUtil.getList(rs);
+        result = Persistence.getList(rs);
       }
       sql = "update message set status = '已读' where common_user_id = ? and ent_user_id = ? and  status = '未读' and category = 'ent_to_common'";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -81,14 +81,14 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       List<Map<String, Object>> result = new ArrayList<>();
       String sql = "select * from message where common_user_id = ? and ent_user_id = ? ORDER BY datime;";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getCommonUserId());
         ps.setInt(2, req.getEntUserId());
         ResultSet rs = ps.executeQuery();
-        result = DBUtil.getList(rs);
+        result = Persistence.getList(rs);
       }
       sql = "update message set status = '已读' where common_user_id = ? and ent_user_id = ? and  status = '未读' and category = 'common_to_ent'";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -112,12 +112,12 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select count(*) as total from message where ent_user_id = ? and status = '未读' and category = 'common_to_ent'";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result.get(0).get("total"));
       }
     } catch (Exception e) {
@@ -135,12 +135,12 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select count(*) as total from message where common_user_id = ? and status = '未读' and category = 'ent_to_common'";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result.get(0).get("total"));
       }
     } catch (Exception e) {
@@ -158,7 +158,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select t.*, (select count(*) from message m where"
           + " t.common_user_id=m.common_user_id and t.ent_user_id=m.ent_user_id"
           + " and  m.status = '未读' and m.category = 'common_to_ent' ) as  count"
@@ -166,7 +166,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -184,7 +184,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select t.*, (select count(*) from message m where"
           + " t.common_user_id=m.common_user_id and t.ent_user_id=m.ent_user_id"
           + " and  m.status = '未读' and m.category = 'ent_to_common' ) as  count"
@@ -192,7 +192,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -210,7 +210,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String ent_sql = "select t2.*, name,"
           + " (select content from message m where t2.common_user_id=m.common_user_id and t2.ent_user_id=m.ent_user_id ORDER BY datime DESC limit 1) as content "
           + " from (select distinct * from (select common_user_id, ent_user_id "
@@ -225,7 +225,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getUserId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -243,7 +243,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       List<Map<String, Object>> result = new ArrayList<>();
       String sql = "select * from ((select b.id,b.uuid,title, b.doc ->> '$.content' as content, '系统推送', dday as datime "+
       "from bulletin b left join enterprise e on e.industry = b.doc ->> '$.industry' and e.address1 = b.doc ->> '$.address_level1' and e.address2 = b.doc ->> '$.address_level2' "+
@@ -252,7 +252,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ps.setInt(2, req.getId());
-        result = DBUtil.getList(ps.executeQuery());
+        result = Persistence.getList(ps.executeQuery());
       }
       sql = "update sys_message set status='已读' where user_category='企业用户' and user_id =?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -276,7 +276,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       List<Map<String, Object>> result = new ArrayList<>();
       String sql = "select * from ((select b.id,b.uuid,title, b.doc ->> '$.content' as content, '系统推送', dday as datime "+
       "from bulletin b left join resume r on r.education = b.doc ->> '$.education' and r.address1 = b.doc ->> '$.address_level1' and r.address2 = b.doc ->> '$.address_level2' "+
@@ -285,7 +285,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ps.setInt(2, req.getId());
-        result = DBUtil.getList(ps.executeQuery());
+        result = Persistence.getList(ps.executeQuery());
       }
       sql = "update sys_message set status='已读' where user_category='个人用户' and user_id =?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -308,12 +308,12 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select count(*) as total from sys_message where user_category=? and user_id=? and status='未读'";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getUserCategory());
         ps.setInt(2, req.getId());
-        resp.put("content", DBUtil.getList(ps.executeQuery()).get(0).get("total"));
+        resp.put("content", Persistence.getList(ps.executeQuery()).get(0).get("total"));
       }
     } catch (Exception e) {
       logger.error("", e);

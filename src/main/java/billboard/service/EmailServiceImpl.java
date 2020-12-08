@@ -25,7 +25,7 @@ public class EmailServiceImpl extends EmailGrpc.EmailImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "insert into captcha (email,code,datime,user_id,user_category) value (?,?,?,?,?) ";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         Date date = new Date(System.currentTimeMillis());
@@ -53,7 +53,7 @@ public class EmailServiceImpl extends EmailGrpc.EmailImplBase {
     resp.put("message", "");
     resp.put("content", "");
     List<Map<String, Object>> result = new ArrayList<>();
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from captcha where user_id=? and user_category=? and code=? and email=? "
           + "and str_to_date(datime,'%Y-%m-%d %H:%i:%s') >= now()-interval 10 minute ORDER BY datime DESC limit 1";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -62,7 +62,7 @@ public class EmailServiceImpl extends EmailGrpc.EmailImplBase {
         ps.setString(3, req.getCode());
         ps.setString(4, req.getEmail());
         ResultSet rs = ps.executeQuery();
-        result = DBUtil.getList(rs);
+        result = Persistence.getList(rs);
       }
       if (result.size() == 0) {
         resp.put("message", false);
@@ -94,7 +94,7 @@ public class EmailServiceImpl extends EmailGrpc.EmailImplBase {
     List<Map<String, Object>> result = new ArrayList<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from captcha where user_category= ? and code=? and email=? "
           + "and str_to_date(datime,'%Y-%m-%d %H:%i:%s') >= now()-interval 10 minute ORDER BY datime DESC limit 1";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -102,7 +102,7 @@ public class EmailServiceImpl extends EmailGrpc.EmailImplBase {
         ps.setString(2, req.getCode());
         ps.setString(3, req.getEmail());
         ResultSet rs = ps.executeQuery();
-        result = DBUtil.getList(rs);
+        result = Persistence.getList(rs);
       }
       if (result.size() == 0) {
         resp.put("message", false);

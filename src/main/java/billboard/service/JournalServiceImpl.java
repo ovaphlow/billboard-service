@@ -22,7 +22,7 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "(select t.datime as journal_date, r.id, r.uuid, r.name, r.address1, r.address2, r.address3, r.qty, r.salary1, r.salary2, r.date, t.category, t.category as data_category,\n"
           + "             (select name from enterprise where id = r.enterprise_id) as enterprise_name from \n"
           + "          (select data_id, datime, category from browse_journal where category = '岗位' and common_user_id =?) as t\n"
@@ -40,7 +40,7 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
         ps.setInt(2, req.getCommonUserId());
         ps.setInt(3, req.getCommonUserId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -58,14 +58,14 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from browse_journal where common_user_id = ? and data_id = ? and category = ? limit 1";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getCommonUserId());
         ps.setInt(2, req.getDataId());
         ps.setString(3, req.getCategory());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           resp.put("content", false);
         } else {
@@ -87,7 +87,7 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "delete from browse_journal where common_user_id = ? and data_id = ? and category=? limit 1";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getCommonUserId());
@@ -111,7 +111,7 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       List<Map<String, Object>> result = new ArrayList<>();
       String sql = "select * from browse_journal where common_user_id = ? and data_id = ? and category = ? limit 1";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -119,7 +119,7 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
         ps.setInt(2, req.getDataId());
         ps.setString(3, req.getCategory());
         ResultSet rs = ps.executeQuery();
-        result = DBUtil.getList(rs);
+        result = Persistence.getList(rs);
       }
       if (result.size() == 0 || "0".equals(req.getCommonUserId())) {
         sql = "insert into browse_journal (common_user_id, common_user_uuid, data_id, data_uuid, category, datime) value (?, ?, ?, ?, ?, ?)";
@@ -159,7 +159,7 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "insert into edit_journal (user_id, user_uuid, category1, category2, datime, data_id, data_uuid, remark) "
           + "value (?,?,?,?,?,?,?,?)";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -189,13 +189,13 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from edit_journal where user_id = ? and category1 = ? order by datime desc";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ps.setString(2, req.getCategory());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
@@ -213,13 +213,13 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from login_journal where user_id = ? and category = ? order by datime desc";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ps.setString(2, req.getCategory());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {

@@ -22,13 +22,13 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from resume where id = ? and uuid = ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ps.setString(2, req.getUuid());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           resp.put("content", false);
         } else {
@@ -50,13 +50,13 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from resume where common_user_id = ? and (select uuid from common_user where id = common_user_id) = ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getCommonUserId());
         ps.setString(2, req.getUuid());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           resp.put("content", false);
         } else {
@@ -78,7 +78,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "update resume set name=?,phone=?, email=?,gender=?,birthday=?,school=?, education=?,\n"
           + "    date_begin=?, date_end=?,major=?,qiwangzhiwei=?,qiwanghangye=?,address1=?,address2=?,\n"
           + "    address3=?, \n" + // " address4=?,\n" +
@@ -122,7 +122,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "update resume set status=? where common_user_id=? and uuid=?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getStatus());
@@ -146,7 +146,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "insert into resume (common_user_id,uuid) value (?,uuid())";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getCommonUserId());
@@ -168,7 +168,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = " select r.* from (select distinct * from " + " (select  user_id from ( "
           + "   select common_user_id as user_id, datime from browse_journal where TO_DAYS(NOW())-TO_DAYS(datime)  <= ? union "
           + "   select user_id, datime from edit_journal where category1 = '个人用户' and TO_DAYS(NOW())-TO_DAYS(datime) <= ? union "
@@ -202,7 +202,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
         for (int inx = 0; inx < list.size(); inx++) {
           ps.setString(inx + 1, list.get(inx));
         }
-        resp.put("content", DBUtil.getList(ps.executeQuery()));
+        resp.put("content", Persistence.getList(ps.executeQuery()));
       }
     } catch (Exception e) {
       logger.error("", e);
@@ -219,7 +219,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = " select r.* from (select distinct * from " + " (select  user_id from ( "
           + "   select common_user_id as user_id, datime from browse_journal where TO_DAYS(NOW())-TO_DAYS(datime)  <= ? union "
           + "   select user_id, datime from edit_journal where category1 = '个人用户' and TO_DAYS(NOW())-TO_DAYS(datime) <= ? union "
@@ -254,7 +254,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
         for (int inx = 0; inx < list.size(); inx++) {
           ps.setString(inx + 1, list.get(inx));
         }
-        resp.put("content", DBUtil.getList(ps.executeQuery()));
+        resp.put("content", Persistence.getList(ps.executeQuery()));
       }
     } catch (Exception e) {
       logger.error("", e);
@@ -271,12 +271,12 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from resume where common_user_id = ? ";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           resp.put("message", "请完善简历个人信息");
         } else {

@@ -31,7 +31,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       Map<String, String> err = new HashMap<>();
       List<Map<String, Object>> result = new ArrayList<>();
       int enterprise_id = 0;
@@ -41,7 +41,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
         ps.setString(1, req.getCode());
         ps.setString(2, req.getEmail());
         ResultSet rs = ps.executeQuery();
-        result = DBUtil.getList(rs);
+        result = Persistence.getList(rs);
         if (result.size() == 0) {
           err.put("code", "0");
         }
@@ -55,7 +55,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
           ps.setString(1, req.getEmail());
           ps.setString(2, req.getEntName());
           ResultSet rs = ps.executeQuery();
-          result = DBUtil.getList(rs);
+          result = Persistence.getList(rs);
           result.get(0).forEach((k, v) -> {
             if (!"0".equals(v.toString())) {
               err.put(k, v.toString());
@@ -113,7 +113,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       List<Map<String, Object>> result = new ArrayList<>();
       String sql = "select * from captcha where user_category=? and code=? and email=? "
           + "and str_to_date(datime,'%Y-%m-%d %H:%i:%s') >= now()-interval 10 minute ORDER BY datime DESC limit 1";
@@ -122,7 +122,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
         ps.setString(2, req.getCode());
         ps.setString(3, req.getEmail());
         ResultSet rs = ps.executeQuery();
-        result = DBUtil.getList(rs);
+        result = Persistence.getList(rs);
       }
       Map<String, String> err = new HashMap<>();
       if (result.size() == 0) {
@@ -132,7 +132,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
           ps.setString(1, req.getEmail());
           ResultSet rs = ps.executeQuery();
-          result = DBUtil.getList(rs);
+          result = Persistence.getList(rs);
         }
         sql = "delete from captcha where user_category=? and code=? and email=? ";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -159,7 +159,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "update enterprise_user set password = ? , salt = ? where id = ? and uuid = ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getPassword());
@@ -184,14 +184,14 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       List<Map<String, Object>> result = new ArrayList<>();
       String sql = "select * from enterprise_user where (phone = ? or email = ?)";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getPhoneEmail());
         ps.setString(2, req.getPhoneEmail());
         ResultSet rs = ps.executeQuery();
-        result = DBUtil.getList(rs);
+        result = Persistence.getList(rs);
       }
       if (result.size() == 0) {
         resp.put("message", "账号或密码错误");
@@ -224,14 +224,14 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       List<Map<String, Object>> result = new ArrayList<>();
       String sql = "select * from enterprise_user where  id = ? and uuid = ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ps.setString(2, req.getUuid());
         ResultSet rs = ps.executeQuery();
-        result = DBUtil.getList(rs);
+        result = Persistence.getList(rs);
       }
       Map<String, String> err = new HashMap<>();
       if (result.size() == 0) {
@@ -256,7 +256,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       List<Map<String, Object>> result = new ArrayList<>();
       Map<String, Object> err = new HashMap<>();
       String sql = "select * from captcha where user_category='企业用户' and code=? and email=? "
@@ -265,7 +265,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
         ps.setString(1, req.getCode());
         ps.setString(2, req.getEmail());
         ResultSet rs = ps.executeQuery();
-        result = DBUtil.getList(rs);
+        result = Persistence.getList(rs);
         if (result.size() == 0) {
           err.put("code", "0");
         }
@@ -305,13 +305,13 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from enterprise_user where phone = ? and id != ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getPhone());
         ps.setInt(2, req.getId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() != 0) {
           resp.put("message", "该电话号码已被使用!");
         } else {
@@ -334,13 +334,13 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from enterprise_user where email = ? and id != ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getEmail());
         ps.setInt(2, req.getId());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() != 0) {
           resp.put("message", "该邮箱已被使用!");
         } else {
@@ -363,12 +363,12 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
+    try (Connection conn = Persistence.getConn()) {
       String sql = "select * from enterprise_user where email = ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getEmail());
         ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
+        List<Map<String, Object>> result = Persistence.getList(rs);
         if (result.size() == 0) {
           resp.put("message", "该邮箱不存在!");
         } else {

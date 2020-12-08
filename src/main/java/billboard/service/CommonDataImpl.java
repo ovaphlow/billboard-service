@@ -24,7 +24,7 @@ public class CommonDataImpl extends CommonDataGrpc.CommonDataImplBase {
     resp.put("message", "");
     resp.put("content", "");
     try (Connection conn = DBUtil.getConn()) {
-      String sql = "select * from common_data where  category='行业'";
+      String sql = "select * from common_data where category = '行业'";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ResultSet rs = ps.executeQuery();
         List<Map<String, Object>> result = DBUtil.getList(rs);

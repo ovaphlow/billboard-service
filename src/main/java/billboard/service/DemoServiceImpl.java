@@ -17,11 +17,8 @@ public class DemoServiceImpl extends DemoGrpc.DemoImplBase {
 
   @Override
   public void test(DemoProto.DemoRequest req, StreamObserver<DemoProto.DemoReply> responseObserver) {
-    logger.info("test");
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
-    System.out.println(req.getItem1());
-    System.out.println(req.getItem2());
     try (Connection conn = DBUtil.getConn()) {
       String sql = "show tables";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {

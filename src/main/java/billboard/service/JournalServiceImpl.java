@@ -19,7 +19,6 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
 
   @Override
   public void list(JournalProto.ListRequest req, StreamObserver<JournalProto.Reply> responseObserver) {
-    logger.info("JournalServiceImpl.list");
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");

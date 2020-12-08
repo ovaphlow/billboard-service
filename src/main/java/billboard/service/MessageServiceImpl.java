@@ -21,7 +21,6 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
 
   @Override
   public void insert(MessageProto.InsertRequest req, StreamObserver<MessageProto.Reply> responseObserver) {
-    logger.info("MessageServiceImpl.insert");
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");

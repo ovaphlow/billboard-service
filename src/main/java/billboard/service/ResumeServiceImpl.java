@@ -19,7 +19,6 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
 
   @Override
   public void get(ResumeProto.GetRequest req, StreamObserver<ResumeProto.Reply> responseObserver) {
-    logger.info("ResumeServiceImpl.get");
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -48,7 +47,6 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
 
   @Override
   public void user(ResumeProto.UserRequest req, StreamObserver<ResumeProto.Reply> responseObserver) {
-    logger.info("ResumeServiceImpl.user");
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");

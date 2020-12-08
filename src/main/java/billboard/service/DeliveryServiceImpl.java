@@ -19,7 +19,6 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
 
   @Override
   public void get(DeliveryProto.GetRequest req, StreamObserver<DeliveryProto.Reply> responseObserver) {
-    logger.info("get");
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -74,7 +73,6 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
 
   @Override
   public void details(DeliveryProto.DetailsRequest req, StreamObserver<DeliveryProto.Reply> responseObserver) {
-    logger.info("details");
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -108,7 +106,6 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
 
   @Override
   public void userDeliveryList(DeliveryProto.UserDeliveryListRequest req, StreamObserver<DeliveryProto.Reply> responseObserver) {
-    logger.info("userDeliveryList");
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -229,7 +226,6 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
         sql += " and re.name = ? ";
       }
       sql += " ORDER BY d.datime DESC";
-      System.out.println(sql);
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         for (int inx = 0; inx < list.size(); inx++) {
           ps.setString(inx + 1, list.get(inx));

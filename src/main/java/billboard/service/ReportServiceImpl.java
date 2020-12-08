@@ -47,7 +47,6 @@ public class ReportServiceImpl extends ReportGrpc.ReportImplBase {
 
   @Override
   public void list(ReportProto.ListRequest req, StreamObserver<ReportProto.Reply> responseObserver) {
-    logger.info("ReportServiceImpl.list");
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");

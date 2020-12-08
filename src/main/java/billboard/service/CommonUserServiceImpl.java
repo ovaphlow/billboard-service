@@ -45,7 +45,6 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
 
   @Override
   public void signIn(CommonUserProto.SignInRequest req, StreamObserver<CommonUserProto.Reply> responseObserver) {
-    logger.info("RecruitmentServiceImpl.signIn");
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");

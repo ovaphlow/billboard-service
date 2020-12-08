@@ -21,7 +21,6 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
 
   @Override
   public void list(FavoriteProto.ListRequest req, StreamObserver<FavoriteProto.Reply> responseObserver) {
-    logger.info("FavoriteServiceImpl.list");
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");

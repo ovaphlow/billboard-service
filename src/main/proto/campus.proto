@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+// option java_multiple_files = true;
+option java_package = "billboard.service";
+option java_outer_classname = "CampusProto";
+
+package campus;
+
+service Campus {
+
+  rpc get(GetRequest) returns (Reply) {}
+
+  rpc search(SearchRequest) returns (Reply) {}
+
+}
+
+message GetRequest {
+  uint32 id = 1;
+  string uuid = 2;
+}
+
+message SearchRequest {
+  map<string, string> filter = 1;
+}
+
+message Reply { string data = 1; }

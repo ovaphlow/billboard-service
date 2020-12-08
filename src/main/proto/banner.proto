@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+// option java_multiple_files = true;
+option java_package = "billboard.service";
+option java_outer_classname = "BannerProto";
+
+package banner;
+
+service Banner {
+
+  rpc get(GetRequest) returns (Reply) {}
+
+  rpc detail(DetailRequest) returns (Reply) {}
+
+}
+
+message GetRequest {
+  string category = 1;
+}
+
+message DetailRequest {
+  uint32 id = 1;
+  string uuid = 2;
+}
+
+
+message Reply { string data = 1; }

@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+// option java_multiple_files = true;
+option java_package = "billboard.service";
+option java_outer_classname = "CommonUserScheduleProto";
+
+package commonUserSchedule;
+
+service CommonUserSchedule {
+
+  rpc get(GetRequest) returns (Reply) {}
+
+  rpc user(UserRequest) returns (Reply) {}
+
+  rpc count(CountRequest) returns (Reply) {}
+
+  rpc insert(InsertRequest) returns (Reply) {}
+
+  rpc delete(DeleteRequest) returns (Reply) {}
+
+}
+
+message GetRequest {
+  uint32 user_id = 1;
+  uint32 campus_id = 2;
+}
+
+message UserRequest {
+  uint32 user_id = 1;
+}
+
+message CountRequest {
+  uint32 user_id = 1;
+}
+
+message DeleteRequest {
+  uint32 id = 1;
+}
+
+message InsertRequest {
+  uint32 common_user_id = 1;
+  uint32 campus_id = 2;
+}
+
+message Reply { string data = 1; }

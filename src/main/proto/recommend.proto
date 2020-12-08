@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+// option java_multiple_files = true;
+option java_package = "billboard.service";
+option java_outer_classname = "RecommendProto";
+
+package recommend;
+
+service Recommend {
+
+  rpc list(ListRequest) returns (Reply) {}
+
+  rpc get(GetRequest) returns (Reply) {}
+
+}
+
+message ListRequest {
+  bool category1 = 1;
+  bool category2 = 2;
+  bool category3 = 3;
+  bool category4 = 4;
+  bool category5 = 5;
+}
+
+message GetRequest {
+  uint32 id = 1;
+  string uuid = 2;
+}
+
+
+message Reply { string data = 1; }

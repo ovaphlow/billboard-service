@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+// option java_multiple_files = true;
+option java_package = "billboard.service";
+option java_outer_classname = "TopicProto";
+
+package topic;
+
+service Topic {
+
+  rpc common(CommonRequest) returns (Reply) {}
+
+  rpc get(GetRequest) returns (Reply) {}
+
+  rpc ent(EntRequest) returns (Reply) {}
+
+}
+
+message CommonRequest {}
+
+message GetRequest {
+  uint32 id = 1;
+  string uuid = 2;
+}
+
+message EntRequest {}
+
+message Reply { string data = 1; }

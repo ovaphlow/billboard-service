@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Map;
 import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
+  private static final Logger logger = LoggerFactory.getLogger(RecommendServiceImpl.class);
 
   @Override
   public void list(RecommendProto.ListRequest req, StreamObserver<RecommendProto.Reply> responseObserver) {
@@ -72,7 +75,7 @@ class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     RecommendProto.Reply reply = RecommendProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -96,7 +99,7 @@ class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
         resp.put("content", result.get(0));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     RecommendProto.Reply reply = RecommendProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
-
   private static final Logger logger = LoggerFactory.getLogger(CommonUserServiceImpl.class);
 
   @Override
@@ -35,7 +34,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
         resp.put("content", result.get(0));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserProto.Reply reply = CommonUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -99,7 +98,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserProto.Reply reply = CommonUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -139,7 +138,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserProto.Reply reply = CommonUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -208,7 +207,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserProto.Reply reply = CommonUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -242,7 +241,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserProto.Reply reply = CommonUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -266,7 +265,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserProto.Reply reply = CommonUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -314,7 +313,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserProto.Reply reply = CommonUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -343,7 +342,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserProto.Reply reply = CommonUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -371,7 +370,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserProto.Reply reply = CommonUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -396,7 +395,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
           resp.put("content", result.get(0));
         }
       } catch (Exception e) {
-        e.printStackTrace();
+        logger.error("", e);
         resp.put("message", "gRPC服务器错误");
       }
       CommonUserProto.Reply reply = CommonUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -423,7 +422,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
           resp.put("content", result.size() != 0);
         }
       } catch (Exception e) {
-        e.printStackTrace();
+        logger.error("", e);
         resp.put("message", "gRPC服务器错误");
       }
       CommonUserProto.Reply reply = CommonUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -455,7 +454,7 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
           ps.execute();
         }
       } catch (Exception e) {
-        e.printStackTrace();
+        logger.error("", e);
         resp.put("message", "gRPC服务器错误");
       }
       CommonUserProto.Reply reply = CommonUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

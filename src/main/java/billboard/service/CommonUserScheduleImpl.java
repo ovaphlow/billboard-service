@@ -10,8 +10,11 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CommonUserScheduleImpl extends CommonUserScheduleGrpc.CommonUserScheduleImplBase {
+  private static final Logger logger = LoggerFactory.getLogger(CommonUserScheduleImpl.class);
 
   @Override
   public void get(CommonUserScheduleProto.GetRequest req, StreamObserver<CommonUserScheduleProto.Reply> responseObserver) {
@@ -33,7 +36,7 @@ public class CommonUserScheduleImpl extends CommonUserScheduleGrpc.CommonUserSch
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserScheduleProto.Reply reply = CommonUserScheduleProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -58,7 +61,7 @@ public class CommonUserScheduleImpl extends CommonUserScheduleGrpc.CommonUserSch
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserScheduleProto.Reply reply = CommonUserScheduleProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -82,7 +85,7 @@ public class CommonUserScheduleImpl extends CommonUserScheduleGrpc.CommonUserSch
         resp.put("content", result.get(0).get("count"));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserScheduleProto.Reply reply = CommonUserScheduleProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -104,7 +107,7 @@ public class CommonUserScheduleImpl extends CommonUserScheduleGrpc.CommonUserSch
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserScheduleProto.Reply reply = CommonUserScheduleProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -132,7 +135,7 @@ public class CommonUserScheduleImpl extends CommonUserScheduleGrpc.CommonUserSch
         resp.put("content", id);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserScheduleProto.Reply reply = CommonUserScheduleProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

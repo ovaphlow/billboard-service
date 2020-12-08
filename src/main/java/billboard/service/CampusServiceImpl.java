@@ -3,7 +3,6 @@ package billboard.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-//import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,62 +81,5 @@ public class CampusServiceImpl extends CampusGrpc.CampusImplBase {
         .build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
-    /*
-     * 2020-11-17
-    Gson gson = new Gson();
-    Map<String, Object> resp = new HashMap<>();
-    resp.put("message", "");
-    resp.put("content", "");
-    try (Connection conn = DBUtil.getConn()) {
-      String sql = "select id, uuid, title, address_level3, address_level2, date, school, category "
-          + "from campus "
-          + "where date >= curdate() ";
-      List<String> list = new ArrayList<>();
-      if (req.getCity() != null && !"".equals(req.getCity())) {
-        sql += "and address_level2 = ? ";
-        list.add(req.getCity());
-      }
-
-      if (req.getCity() != null && !"".equals(req.getCity())) {
-        sql += "and address_level2 = ? ";
-        list.add(req.getCity());
-      }
-
-      boolean flg = false;
-      String category = "";
-      if (req.getCategory1()) {
-        category += " category = ? ";
-        list.add("宣讲会");
-        flg = true;
-      }
-      if (req.getCategory2()) {
-        if (flg) {
-          category += " or ";
-        }
-        category += "category = ? ";
-        list.add("双选会");
-        flg = true;
-      }
-
-      if (flg) {
-        sql += "and ( " + category + " )";
-      }
-      sql += "ORDER BY date";
-      try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        for (int inx = 0; inx < list.size(); inx++) {
-          ps.setString(inx + 1, list.get(inx));
-        }
-        ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = DBUtil.getList(rs);
-        resp.put("content", result);
-      }
-    } catch (Exception e) {
-      logger.error("", e);
-      resp.put("message", "gRPC服务器错误");
-    }
-    CampusProto.Reply reply = CampusProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
-    responseObserver.onNext(reply);
-    responseObserver.onCompleted();
-    */
   }
 }

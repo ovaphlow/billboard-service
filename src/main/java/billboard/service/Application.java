@@ -42,14 +42,11 @@ public class Application {
         .build()
         .start();
     logger.info("服务启动于端口 " + port);
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      @Override
-      public void run() {
-        System.err.println("*** shutting down gRPC server since JVM is shutting down");
-        Application.this.stop();
-        System.err.println("*** server shut down");
-      }
-    });
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      System.err.println("*** shutting down gRPC server since JVM is shutting down");
+      Application.this.stop();
+      System.err.println("*** server shut down");
+    }));
   }
 
   private void stop() {

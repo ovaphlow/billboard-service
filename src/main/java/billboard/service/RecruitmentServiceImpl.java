@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase {
-
   private static final Logger logger = LoggerFactory.getLogger(RecruitmentServiceImpl.class);
 
   @Override
@@ -35,7 +34,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -117,7 +116,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -155,7 +154,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -179,7 +178,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -194,9 +193,12 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
     resp.put("message", "");
     resp.put("content", "");
     try (Connection conn = DBUtil.getConn()) {
-      String sql = "select r.*, e.name as enterprise_name, e.uuid as enterprise_uuid, u.id as ent_user_id\n"
-          + "from recruitment r left join enterprise e on e.id=r.enterprise_id\n"
-          + "left join enterprise_user u on u.enterprise_id = e.id\n" + "where r.id = ? and r.uuid = ?";
+      String sql = """
+          select r.*, e.name as enterprise_name, e.uuid as enterprise_uuid, u.id as ent_user_id
+          from recruitment r left join enterprise e on e.id=r.enterprise_id
+          left join enterprise_user u on u.enterprise_id = e.id
+          where r.id = ? and r.uuid = ?
+          """;
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ps.setString(2, req.getUuid());
@@ -209,7 +211,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -271,7 +273,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -335,7 +337,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -365,7 +367,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -419,7 +421,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -446,7 +448,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -474,7 +476,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -497,7 +499,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

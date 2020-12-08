@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 // import org.slf4j.Logger;
 
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,9 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUserImplBase {
-
-  // private static final Logger logger =
-  // LoggerFactory.getLogger(EnterpriseUserServiceImpl.class);
+   private static final Logger logger = LoggerFactory.getLogger(EnterpriseUserServiceImpl.class);
 
   @Override
   public void signIn(EnterpriseUserProto.SignInRequest req,
@@ -98,7 +98,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EnterpriseUserProto.Reply reply = EnterpriseUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -144,7 +144,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
         resp.put("content", result.get(0));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EnterpriseUserProto.Reply reply = EnterpriseUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -170,7 +170,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EnterpriseUserProto.Reply reply = EnterpriseUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -209,7 +209,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EnterpriseUserProto.Reply reply = EnterpriseUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -241,7 +241,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
         resp.put("content", result.get(0));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EnterpriseUserProto.Reply reply = EnterpriseUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -290,7 +290,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EnterpriseUserProto.Reply reply = EnterpriseUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -319,7 +319,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EnterpriseUserProto.Reply reply = EnterpriseUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -348,7 +348,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EnterpriseUserProto.Reply reply = EnterpriseUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -376,7 +376,7 @@ public class EnterpriseUserServiceImpl extends EnterpriseUserGrpc.EnterpriseUser
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EnterpriseUserProto.Reply reply = EnterpriseUserProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

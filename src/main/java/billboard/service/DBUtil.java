@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DBUtil {
-  private static HikariDataSource ds;
+  private static final HikariDataSource ds;
 
   static {
     HikariConfig config = new HikariConfig();

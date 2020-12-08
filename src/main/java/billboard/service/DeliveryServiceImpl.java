@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.ArrayList;
 
 public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
-
   private static final Logger logger = LoggerFactory.getLogger(DeliveryServiceImpl.class);
 
   @Override
@@ -36,7 +35,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     DeliveryProto.Reply reply = DeliveryProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -63,7 +62,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     DeliveryProto.Reply reply = DeliveryProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -96,7 +95,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     DeliveryProto.Reply reply = DeliveryProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -121,7 +120,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     DeliveryProto.Reply reply = DeliveryProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -150,7 +149,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     DeliveryProto.Reply reply = DeliveryProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -178,7 +177,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
         resp.put("content", rs);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     DeliveryProto.Reply reply = DeliveryProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -235,7 +234,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     DeliveryProto.Reply reply = DeliveryProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -258,7 +257,7 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     DeliveryProto.Reply reply = DeliveryProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

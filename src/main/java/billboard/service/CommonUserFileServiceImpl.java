@@ -10,8 +10,11 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CommonUserFileServiceImpl extends CommonUserFileGrpc.CommonUserFileImplBase {
+  private static final Logger logger = LoggerFactory.getLogger(CommonUserFileServiceImpl.class);
 
   @Override
   public void get(CommonUserFileProto.GetRequest req, StreamObserver<CommonUserFileProto.Reply> responseObserver) {
@@ -29,7 +32,7 @@ public class CommonUserFileServiceImpl extends CommonUserFileGrpc.CommonUserFile
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserFileProto.Reply reply = CommonUserFileProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -51,7 +54,7 @@ public class CommonUserFileServiceImpl extends CommonUserFileGrpc.CommonUserFile
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserFileProto.Reply reply = CommonUserFileProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -78,7 +81,7 @@ public class CommonUserFileServiceImpl extends CommonUserFileGrpc.CommonUserFile
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonUserFileProto.Reply reply = CommonUserFileProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

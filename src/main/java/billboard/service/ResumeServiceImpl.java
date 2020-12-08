@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
-
   private static final Logger logger = LoggerFactory.getLogger(ResumeServiceImpl.class);
 
   @Override
@@ -37,7 +36,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -65,7 +64,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -109,7 +108,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -133,7 +132,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -155,7 +154,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
         resp.put("content", rs);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -206,7 +205,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
         resp.put("content", DBUtil.getList(ps.executeQuery()));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -258,7 +257,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
         resp.put("content", DBUtil.getList(ps.executeQuery()));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -294,7 +293,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

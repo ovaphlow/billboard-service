@@ -9,8 +9,11 @@ import java.util.HashMap;
 import com.google.gson.Gson;
 
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BannerServiceImpl extends BannerGrpc.BannerImplBase {
+  private static final Logger logger = LoggerFactory.getLogger(BannerServiceImpl.class);
 
   @Override
   public void get(BannerProto.GetRequest req, StreamObserver<BannerProto.Reply> responseObserver) {
@@ -19,7 +22,13 @@ public class BannerServiceImpl extends BannerGrpc.BannerImplBase {
     resp.put("message", "");
     resp.put("content", "");
     try (Connection conn = DBUtil.getConn()) {
-      String sql = "select id, uuid,datime,data_url,source_url, category from banner where category = ? and status = '启用' ORDER BY datime DESC ";
+      String sql = """
+          select id, uuid, datime, data_url, source_url, category
+          from banner
+          where category = ?
+            and status = '启用'
+          ORDER BY datime DESC
+          """;
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getCategory());
         ResultSet rs = ps.executeQuery();
@@ -27,7 +36,7 @@ public class BannerServiceImpl extends BannerGrpc.BannerImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     responseObserver.onNext(BannerProto.Reply.newBuilder().setData(gson.toJson(resp)).build());
@@ -54,11 +63,10 @@ public class BannerServiceImpl extends BannerGrpc.BannerImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     responseObserver.onNext(BannerProto.Reply.newBuilder().setData(gson.toJson(resp)).build());
     responseObserver.onCompleted();
   }
-
 }

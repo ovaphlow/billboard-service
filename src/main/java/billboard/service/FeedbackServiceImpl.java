@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.List;
 
 public class FeedbackServiceImpl extends FeedbackGrpc.FeedbackImplBase {
-
   private static Logger logger = LoggerFactory.getLogger(FeedbackServiceImpl.class);
 
   @Override
@@ -35,7 +34,7 @@ public class FeedbackServiceImpl extends FeedbackGrpc.FeedbackImplBase {
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     FeedbackProto.Reply reply = FeedbackProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -59,7 +58,7 @@ public class FeedbackServiceImpl extends FeedbackGrpc.FeedbackImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     FeedbackProto.Reply reply = FeedbackProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

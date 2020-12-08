@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
-
   private static final Logger logger = LoggerFactory.getLogger(MessageServiceImpl.class);
 
   @Override
@@ -37,7 +36,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     MessageProto.Reply reply = MessageProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -68,7 +67,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
       }
       resp.put("content", result);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     MessageProto.Reply reply = MessageProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -99,7 +98,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
       }
       resp.put("content", result);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     MessageProto.Reply reply = MessageProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -122,7 +121,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
         resp.put("content", result.get(0).get("total"));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     MessageProto.Reply reply = MessageProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -145,7 +144,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
         resp.put("content", result.get(0).get("total"));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     MessageProto.Reply reply = MessageProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -171,7 +170,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     MessageProto.Reply reply = MessageProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -197,7 +196,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     MessageProto.Reply reply = MessageProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -230,7 +229,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     MessageProto.Reply reply = MessageProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -262,7 +261,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     MessageProto.Reply reply = MessageProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -295,7 +294,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     MessageProto.Reply reply = MessageProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -317,7 +316,7 @@ public class MessageServiceImpl extends MessageGrpc.MessageImplBase {
         resp.put("content", DBUtil.getList(ps.executeQuery()).get(0).get("total"));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     MessageProto.Reply reply = MessageProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

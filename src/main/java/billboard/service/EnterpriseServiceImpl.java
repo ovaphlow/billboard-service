@@ -2,6 +2,8 @@ package billboard.service;
 
 import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,9 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
-
-  // private static final Logger logger =
-  // LoggerFactory.getLogger(EnterpriseServiceImpl.class);
+   private static final Logger logger = LoggerFactory.getLogger(EnterpriseServiceImpl.class);
 
   @Override
   public void get(EnterpriseProto.GetRequest req, StreamObserver<EnterpriseProto.Reply> responseObserver) {
@@ -37,7 +37,7 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EnterpriseProto.Reply reply = EnterpriseProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -65,7 +65,7 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EnterpriseProto.Reply reply = EnterpriseProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -104,7 +104,7 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EnterpriseProto.Reply reply = EnterpriseProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -127,7 +127,7 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EnterpriseProto.Reply reply = EnterpriseProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -156,7 +156,7 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EnterpriseProto.Reply reply = EnterpriseProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

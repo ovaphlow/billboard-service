@@ -27,7 +27,7 @@ public class DemoServiceImpl extends DemoGrpc.DemoImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     DemoProto.DemoReply reply = DemoProto.DemoReply.newBuilder().setData(gson.toJson(resp)).build();

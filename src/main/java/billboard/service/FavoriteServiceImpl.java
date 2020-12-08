@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
-
   private static final Logger logger = LoggerFactory.getLogger(FavoriteServiceImpl.class);
 
   @Override
@@ -46,7 +45,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     FavoriteProto.Reply reply = FavoriteProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -76,7 +75,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     FavoriteProto.Reply reply = FavoriteProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -126,7 +125,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     FavoriteProto.Reply reply = FavoriteProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -148,7 +147,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     FavoriteProto.Reply reply = FavoriteProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -176,7 +175,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     FavoriteProto.Reply reply = FavoriteProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
-
   private static Logger logger = LoggerFactory.getLogger(JournalServiceImpl.class);
 
   @Override
@@ -45,7 +44,7 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     JournalProto.Reply reply = JournalProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -74,7 +73,7 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     JournalProto.Reply reply = JournalProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -98,7 +97,7 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
         resp.put("content", rs);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     JournalProto.Reply reply = JournalProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -146,7 +145,7 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     JournalProto.Reply reply = JournalProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -176,7 +175,7 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     JournalProto.Reply reply = JournalProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -200,7 +199,7 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     JournalProto.Reply reply = JournalProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -224,7 +223,7 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     JournalProto.Reply reply = JournalProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

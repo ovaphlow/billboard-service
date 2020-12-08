@@ -10,9 +10,12 @@ import java.util.Map;
 import com.google.gson.Gson;
 
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // @SuppressWarnings("unchecked")
 public class CommonDataImpl extends CommonDataGrpc.CommonDataImplBase {
+  private static final Logger logger = LoggerFactory.getLogger(CommonDataImpl.class);
 
   @Override
   public void hangye(CommonDataRequest req, StreamObserver<CommonDataReply> responseObserver) {
@@ -28,7 +31,7 @@ public class CommonDataImpl extends CommonDataGrpc.CommonDataImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     CommonDataReply reply = CommonDataReply.newBuilder().setData(gson.toJson(resp)).build();

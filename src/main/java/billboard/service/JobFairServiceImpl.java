@@ -3,6 +3,8 @@ package billboard.service;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
+  private static final Logger logger = LoggerFactory.getLogger(JobFairServiceImpl.class);
 
   @Override
   public void list(JobFairProto.ListRequest req, StreamObserver<JobFairProto.Reply> responseObserver) {
@@ -29,7 +32,7 @@ public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     JobFairProto.Reply reply = JobFairProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -57,7 +60,7 @@ public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     JobFairProto.Reply reply = JobFairProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -84,7 +87,7 @@ public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     JobFairProto.Reply reply = JobFairProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -134,7 +137,7 @@ public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
       }
       resp.put("content", "");
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     JobFairProto.Reply reply = JobFairProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

@@ -12,8 +12,11 @@ import java.util.HashMap;
 import java.sql.Connection;
 import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
+  private static final Logger logger = LoggerFactory.getLogger(OfferServiceImpl.class);
 
   @Override
   public void entList(OfferProto.EntListRequest req, StreamObserver<OfferProto.Reply> responseObserver) {
@@ -32,7 +35,7 @@ public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     OfferProto.Reply reply = OfferProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -63,7 +66,7 @@ public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
       }
       resp.put("content", result);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     OfferProto.Reply reply = OfferProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -86,7 +89,7 @@ public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
         resp.put("content", result.get(0).get("total"));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     OfferProto.Reply reply = OfferProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -116,7 +119,7 @@ public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     OfferProto.Reply reply = OfferProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

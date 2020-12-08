@@ -10,8 +10,11 @@ import java.util.Map;
 import com.google.gson.Gson;
 
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TopicServiceImpl extends TopicGrpc.TopicImplBase {
+  private static final Logger logger = LoggerFactory.getLogger(TopicServiceImpl.class);
 
   @Override
   public void common(TopicProto.CommonRequest req, StreamObserver<TopicProto.Reply> responseObserver) {
@@ -19,7 +22,6 @@ public class TopicServiceImpl extends TopicGrpc.TopicImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
-    // Map.of(, );
     try (Connection conn = DBUtil.getConn()) {
       String sql = "select uuid,id,title from topic where tag='热门话题'  ORDER BY date desc limit 9";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -28,7 +30,7 @@ public class TopicServiceImpl extends TopicGrpc.TopicImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     responseObserver.onNext(TopicProto.Reply.newBuilder().setData(gson.toJson(resp)).build());
@@ -51,7 +53,7 @@ public class TopicServiceImpl extends TopicGrpc.TopicImplBase {
         resp.put("content", result.get(0));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     TopicProto.Reply reply = TopicProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -73,7 +75,7 @@ public class TopicServiceImpl extends TopicGrpc.TopicImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     TopicProto.Reply reply = TopicProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

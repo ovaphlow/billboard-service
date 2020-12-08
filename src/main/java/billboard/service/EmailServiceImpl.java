@@ -13,8 +13,11 @@ import java.util.Map;
 import com.google.gson.Gson;
 
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EmailServiceImpl extends EmailGrpc.EmailImplBase {
+  private static final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 
   @Override
   public void insert(EmailProto.InsertRequest req, StreamObserver<EmailProto.Reply> responseObserver) {
@@ -25,7 +28,6 @@ public class EmailServiceImpl extends EmailGrpc.EmailImplBase {
     try (Connection conn = DBUtil.getConn()) {
       String sql = "insert into captcha (email,code,datime,user_id,user_category) value (?,?,?,?,?) ";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        System.out.print(req.getCode());
         Date date = new Date(System.currentTimeMillis());
         ps.setString(1, req.getEmail());
         ps.setString(2, req.getCode());
@@ -36,7 +38,7 @@ public class EmailServiceImpl extends EmailGrpc.EmailImplBase {
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EmailProto.Reply reply = EmailProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -77,7 +79,7 @@ public class EmailServiceImpl extends EmailGrpc.EmailImplBase {
       }
 
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EmailProto.Reply reply = EmailProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -115,7 +117,7 @@ public class EmailServiceImpl extends EmailGrpc.EmailImplBase {
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     EmailProto.Reply reply = EmailProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

@@ -10,9 +10,12 @@ import java.util.Map;
 import com.google.gson.Gson;
 
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // @SuppressWarnings("unchecked")
 public class ChartServiceImpl extends ChartGrpc.ChartImplBase {
+  private static final Logger logger = LoggerFactory.getLogger(ChartServiceImpl.class);
 
   @Override
   public void entHome(ChartRequest req, StreamObserver<ChartReply> responseObserver) {
@@ -21,15 +24,20 @@ public class ChartServiceImpl extends ChartGrpc.ChartImplBase {
     resp.put("message", "");
     resp.put("content", "");
     try (Connection conn = DBUtil.getConn()) {
-      String sql = "select zhiwei, count(zhiwei) as count from (select qiwangzhiwei as zhiwei  "
-          + "from resume where qiwanghangye != '' and  qiwangzhiwei != '' ) as t GROUP BY zhiwei ORDER BY count DESC limit 10";
+      String sql = """
+          select zhiwei, count(zhiwei) as count
+          from (select qiwangzhiwei as zhiwei from resume where qiwanghangye != '' and  qiwangzhiwei != '' ) as t
+          GROUP BY zhiwei
+          ORDER BY count DESC
+          limit 10
+          """;
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ResultSet rs = ps.executeQuery();
         List<Map<String, Object>> result = DBUtil.getList(rs);
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     ChartReply reply = ChartReply.newBuilder().setData(gson.toJson(resp)).build();

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ReportServiceImpl extends ReportGrpc.ReportImplBase {
-
   private static Logger logger = LoggerFactory.getLogger(ReportServiceImpl.class);
 
   @Override
@@ -37,7 +36,7 @@ public class ReportServiceImpl extends ReportGrpc.ReportImplBase {
         resp.put("content", true);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     ReportProto.Reply reply = ReportProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
@@ -64,7 +63,7 @@ public class ReportServiceImpl extends ReportGrpc.ReportImplBase {
         resp.put("content", result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
     ReportProto.Reply reply = ReportProto.Reply.newBuilder().setData(gson.toJson(resp)).build();

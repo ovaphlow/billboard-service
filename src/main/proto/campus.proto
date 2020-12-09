@@ -1,26 +1,25 @@
 syntax = "proto3";
 
-// option java_multiple_files = true;
+option java_multiple_files = true;
 option java_package = "billboard.service";
 option java_outer_classname = "CampusProto";
 
-package campus;
+package billboard;
 
 service Campus {
-
-  rpc get(GetRequest) returns (Reply) {}
-
-  rpc search(SearchRequest) returns (Reply) {}
-
+  rpc Get (CampusGetRequest) returns (CampusReply) {}
+  rpc Search (CampusSearchRequest) returns (CampusReply) {}
 }
 
-message GetRequest {
+message CampusGetRequest {
   uint32 id = 1;
   string uuid = 2;
 }
 
-message SearchRequest {
+message CampusSearchRequest {
   map<string, string> filter = 1;
 }
 
-message Reply { string data = 1; }
+message CampusReply {
+  string data = 1;
+}

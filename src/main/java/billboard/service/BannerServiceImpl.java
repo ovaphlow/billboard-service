@@ -17,18 +17,18 @@ public class BannerServiceImpl extends BannerGrpc.BannerImplBase {
   private static final Logger logger = LoggerFactory.getLogger(BannerServiceImpl.class);
 
   @Override
-  public void get(BannerProto.GetRequest req, StreamObserver<BannerProto.Reply> responseObserver) {
+  public void get(BannerGetRequest req, StreamObserver<BannerReply> responseObserver) {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
     try (Connection conn = Persistence.getConn()) {
       String sql = """
-        select id, uuid, datime, data_url, source_url, category
-        from banner
-        where category = ?
-          and status = '启用'
-        ORDER BY datime DESC
-        """;
+          select id, uuid, datime, data_url, source_url, category
+          from banner
+          where category = ?
+            and status = '启用'
+          ORDER BY datime DESC
+          """;
       List<Map<String, Object>> result = new QueryRunner().query(conn, sql,
           new MapListHandler(),
           req.getCategory());
@@ -37,7 +37,7 @@ public class BannerServiceImpl extends BannerGrpc.BannerImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    BannerProto.Reply reply = BannerProto.Reply
+    BannerReply reply = BannerReply
         .newBuilder()
         .setData(new Gson().toJson(resp))
         .build();
@@ -46,8 +46,8 @@ public class BannerServiceImpl extends BannerGrpc.BannerImplBase {
   }
 
   @Override
-  public void detail(BannerProto.DetailRequest req,
-      StreamObserver<BannerProto.Reply> responseObserver) {
+  public void detail(BannerDetailRequest req,
+      StreamObserver<BannerReply> responseObserver) {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
@@ -62,7 +62,7 @@ public class BannerServiceImpl extends BannerGrpc.BannerImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    BannerProto.Reply reply = BannerProto.Reply
+    BannerReply reply = BannerReply
         .newBuilder()
         .setData(new Gson().toJson(resp))
         .build();

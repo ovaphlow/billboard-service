@@ -17,7 +17,7 @@ public class CampusServiceImpl extends CampusGrpc.CampusImplBase {
   private static final Logger logger = LoggerFactory.getLogger(CampusServiceImpl.class);
 
   @Override
-  public void get(CampusProto.GetRequest req, StreamObserver<CampusProto.Reply> responseObserver) {
+  public void get(CampusGetRequest req, StreamObserver<CampusReply> responseObserver) {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
@@ -32,7 +32,7 @@ public class CampusServiceImpl extends CampusGrpc.CampusImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    CampusProto.Reply reply = CampusProto.Reply
+    CampusReply reply = CampusReply
         .newBuilder()
         .setData(new Gson().toJson(resp))
         .build();
@@ -41,22 +41,21 @@ public class CampusServiceImpl extends CampusGrpc.CampusImplBase {
   }
 
   @Override
-  public void search(CampusProto.SearchRequest req,
-      StreamObserver<CampusProto.Reply> responseObserver) {
+  public void search(CampusSearchRequest req, StreamObserver<CampusReply> responseObserver) {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
     try (Connection cnx = Persistence.getConn()) {
       String sql = """
-        select id, uuid, title, address_level3, address_level2, date, school, category
-        from campus
-        where date >= curdate()
-          and position(? in address_level2) > 0
-          and (category = ? or category = ?)
-          and (position(? in title) > 0 or position(? in school) > 0)
-        order by date
-        limit 200
-        """;
+          select id, uuid, title, address_level3, address_level2, date, school, category
+          from campus
+          where date >= curdate()
+            and position(? in address_level2) > 0
+            and (category = ? or category = ?)
+            and (position(? in title) > 0 or position(? in school) > 0)
+          order by date
+          limit 200
+          """;
       List<Map<String, Object>> result = new QueryRunner().query(cnx, sql,
           new MapListHandler(),
           req.getFilterMap().get("city"),
@@ -69,10 +68,7 @@ public class CampusServiceImpl extends CampusGrpc.CampusImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    CampusProto.Reply reply = CampusProto.Reply
-        .newBuilder()
-        .setData(new Gson().toJson(resp))
-        .build();
+    CampusReply reply = CampusReply.newBuilder().setData(new Gson().toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }

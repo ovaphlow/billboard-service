@@ -46,13 +46,14 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
 
   /**
    * 2020-11-10
-   * ata list
+   * data list
    * 用于之后的接口整合，候选代码。
    * param { category: String, filter: Map }
    * return filter results toJson(List<Map<String, Object>>)
    */
   @Override
-  public void filter(RecruitmentFilterRequest req, StreamObserver<RecruitmentReply> responseObserver) {
+  public void filter(RecruitmentFilterRequest req,
+      StreamObserver<RecruitmentReply> responseObserver) {
     String resp = "[]";
     try (Connection cnx = Persistence.getConn()) {
       if ("".equals(req.getCategory())) {
@@ -77,7 +78,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         resp = new Gson().toJson(result);
       } else if ("wx-default-list".equals(req.getCategory())) {
         int page = Integer.parseInt(req.getParamMap().get("page"));
-        int offset = page > 0 ? (page - 1) * 100 : 0;
+        int offset = page > 1 ? (page - 1) * 100 : 0;
         String sql = """
             select *
             from recruitment

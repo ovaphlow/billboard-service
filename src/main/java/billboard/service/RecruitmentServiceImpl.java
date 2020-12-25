@@ -76,6 +76,8 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         List<Map<String, Object>> result = Persistence.getList(rs);
         resp = new Gson().toJson(result);
       } else if ("wx-default-list".equals(req.getCategory())) {
+        int page = Integer.parseInt(req.getParamMap().get("page"));
+        int offset = page > 0 ? (page - 1) * 100 : 0;
         String sql = """
             select *
             from recruitment
@@ -88,14 +90,15 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
                 or enterprise_id in (select id from enterprise where position(? in name) > 0)
               )
             order by date_refresh, id desc
-            limit 100
+            limit ?, 100
             """;
         List<Map<String, Object>> result = new QueryRunner().query(cnx, sql, new MapListHandler(),
             req.getParamMap().get("category"),
             req.getParamMap().get("city"),
             req.getParamMap().get("industry"),
             req.getParamMap().get("keyword"),
-            req.getParamMap().get("keyword"));
+            req.getParamMap().get("keyword"),
+            offset);
         resp = new Gson().toJson(result);
       }
     } catch (Exception e) {

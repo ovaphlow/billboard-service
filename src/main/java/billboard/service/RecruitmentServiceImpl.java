@@ -248,6 +248,12 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
     responseObserver.onCompleted();
   }
 
+  /**
+   * 202012
+   * todo: remove procedure
+   * @param req
+   * @param responseObserver
+   */
   @Override
   public void search(RecruitmentSearchRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
@@ -311,6 +317,12 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
   }
 
 
+  /**
+   * 202012
+   * todo: remove procedure
+   * @param req
+   * @param responseObserver
+   */
   @Override
   public void keywordSearch(RecruitmentKeywordSearchRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();

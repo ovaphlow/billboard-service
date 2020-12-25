@@ -1,48 +1,35 @@
 syntax = "proto3";
 
-// option java_multiple_files = true;
+option java_multiple_files = true;
 option java_package = "billboard.service";
 option java_outer_classname = "RecruitmentProto";
 
 package recruitment;
 
 service Recruitment {
-
-  rpc get(GetRequest) returns (Reply) {}
-
-  rpc list(ListRequest) returns (Reply) {}
-
-  rpc filter(FilterRequest) returns (Reply) {}
-
-  rpc insert(InsertRequest) returns (Reply) {}
-
-  rpc update(UpdateRequest) returns (Reply) {}
-
-  rpc search(SearchRequest) returns (Reply) {}
-
-  rpc keywordSearch(KeywordSearchRequest) returns (Reply) {}
-
-  rpc status(StatusRequest) returns (Reply) {}
-
-  rpc enterpriseList(EnterpriseListRequest) returns (Reply) {}
-
-  rpc enterpriseSearch(EnterpriseSearchRequest) returns (Reply) {}
-
-  rpc subject(SubjectRequest) returns (Reply) {}
-
-  rpc jobFairEntList(JobFairEntListRequest) returns (Reply) {}
-
-  rpc jobFairList(JobFairListRequest) returns (Reply) {}
+  rpc get(RecruitmentGetRequest) returns (RecruitmentReply) {}
+  rpc list(RecruitmentListRequest) returns (RecruitmentReply) {}
+  rpc filter(RecruitmentFilterRequest) returns (RecruitmentReply) {}
+  rpc insert(RecruitmentInsertRequest) returns (RecruitmentReply) {}
+  rpc update(RecruitmentUpdateRequest) returns (RecruitmentReply) {}
+  rpc search(RecruitmentSearchRequest) returns (RecruitmentReply) {}
+  rpc keywordSearch(RecruitmentKeywordSearchRequest) returns (RecruitmentReply) {}
+  rpc status(RecruitmentStatusRequest) returns (RecruitmentReply) {}
+  rpc enterpriseList(RecruitmentEnterpriseListRequest) returns (RecruitmentReply) {}
+  rpc enterpriseSearch(RecruitmentEnterpriseSearchRequest) returns (RecruitmentReply) {}
+  rpc subject(RecruitmentSubjectRequest) returns (RecruitmentReply) {}
+  rpc jobFairEntList(RecruitmentJobFairEntListRequest) returns (RecruitmentReply) {}
+  rpc jobFairList(RecruitmentJobFairListRequest) returns (RecruitmentReply) {}
 }
 
-message ListRequest {}
+message RecruitmentListRequest {}
 
-message FilterRequest {
+message RecruitmentFilterRequest {
   string category = 1;
-  map<string, string> filter = 2;
+  map<string, string> param = 2;
 }
 
-message InsertRequest {
+message RecruitmentInsertRequest {
   uint32 enterprise_id = 1;
   string enterprise_uuid = 2;
   string name = 3;
@@ -60,7 +47,7 @@ message InsertRequest {
   string position = 15;
 }
 
-message UpdateRequest {
+message RecruitmentUpdateRequest {
   uint32 id = 1;
   string uuid = 2;
   string name = 3;
@@ -78,25 +65,25 @@ message UpdateRequest {
   string position = 15;
 }
 
-message StatusRequest {
+message RecruitmentStatusRequest {
   string status = 1;
   uint32 id = 2;
   string uuid = 3;
 }
 
-message GetRequest {
+message RecruitmentGetRequest {
   uint32 id = 1;
   string uuid = 2;
 }
 
-message SearchRequest {
+message RecruitmentSearchRequest {
   string city = 1;
   bool category1 = 2;
   bool category2 = 3;
   bool category3 = 4;
 }
 
-message KeywordSearchRequest {
+message RecruitmentKeywordSearchRequest {
   string keyword = 1;
   string city = 2;
   bool category1 = 3;
@@ -104,12 +91,12 @@ message KeywordSearchRequest {
   bool category3 = 5;
 }
 
-message EnterpriseListRequest {
+message RecruitmentEnterpriseListRequest {
   uint32 id = 1;
   string uuid = 2;
 }
 
-message EnterpriseSearchRequest {
+message RecruitmentEnterpriseSearchRequest {
   string enterprise_id = 1;
   string uuid = 2;
   string name = 3;
@@ -119,18 +106,18 @@ message EnterpriseSearchRequest {
   string education = 7;
 }
 
-message SubjectRequest {
+message RecruitmentSubjectRequest {
   string subject = 1;
 }
 
-message JobFairEntListRequest {
+message RecruitmentJobFairEntListRequest {
   uint32 job_fair_id = 1;
   uint32 ent_id = 2;
   string ent_uuid = 3;
 }
 
-message JobFairListRequest {
+message RecruitmentJobFairListRequest {
   uint32 job_fair_id = 1;
 }
 
-message Reply { string data = 1; }
+message RecruitmentReply { string data = 1; }

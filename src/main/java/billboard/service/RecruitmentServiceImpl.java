@@ -2,6 +2,8 @@ package billboard.service;
 
 import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +23,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
   private static final Logger logger = LoggerFactory.getLogger(RecruitmentServiceImpl.class);
 
   @Override
-  public void list(RecruitmentProto.ListRequest req, StreamObserver<RecruitmentProto.Reply> responseObserver) {
+  public void list(RecruitmentListRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -37,51 +39,75 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    RecruitmentReply reply = RecruitmentReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   /**
    * 2020-11-10
-   * 按类别检索岗位能。
+   * ata list
    * 用于之后的接口整合，候选代码。
    * param { category: String, filter: Map }
    * return filter results toJson(List<Map<String, Object>>)
    */
   @Override
-  public void filter(RecruitmentProto.FilterRequest req, StreamObserver<RecruitmentProto.Reply> responseObserver) {
+  public void filter(RecruitmentFilterRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     String resp = "[]";
-    try (Connection conn = Persistence.getConn()) {
+    try (Connection cnx = Persistence.getConn()) {
       if ("".equals(req.getCategory())) {
-        String sql = "select * from recruitment where status = '在招' order by id desc limit 200";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        String sql = "select * from recruitment where status = '在招' order by id desc limit 100";
+        PreparedStatement ps = cnx.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         List<Map<String, Object>> result = Persistence.getList(rs);
         resp = new Gson().toJson(result);
       } else if ("byCategory".equals(req.getCategory())) {
-        String sql = "select * "
-            + "from recruitment "
-            + "where position(? in industry) > 0 "
-            + "and status = '在招' "
-            + "order by id desc "
-            + "limit 200";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, req.getFilterMap().get("category"));
+        String sql = """
+            select *
+            from recruitment
+            where position(? in industry) > 0
+            and status = '在招'
+            order by id desc
+            limit 100
+            """;
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setString(1, req.getParamMap().get("category"));
         ResultSet rs = ps.executeQuery();
         List<Map<String, Object>> result = Persistence.getList(rs);
+        resp = new Gson().toJson(result);
+      } else if ("wx-default-list".equals(req.getCategory())) {
+        String sql = """
+            select *
+            from recruitment
+            where status = '在招'
+              and position(category in ?) > 0
+              and position(? in address2) > 0
+              and position(? in industry) > 0
+              and (
+                position(? in name) > 0
+                or enterprise_id in (select id from enterprise where position(? in name) > 0)
+              )
+            order by date_refresh, id desc
+            limit 100
+            """;
+        List<Map<String, Object>> result = new QueryRunner().query(cnx, sql, new MapListHandler(),
+            req.getParamMap().get("category"),
+            req.getParamMap().get("city"),
+            req.getParamMap().get("industry"),
+            req.getParamMap().get("keyword"),
+            req.getParamMap().get("keyword"));
         resp = new Gson().toJson(result);
       }
     } catch (Exception e) {
       logger.error("", e);
     }
-    RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(resp).build();
+    RecruitmentReply reply = RecruitmentReply.newBuilder().setData(resp).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void insert(RecruitmentProto.InsertRequest req, StreamObserver<RecruitmentProto.Reply> responseObserver) {
+  public void insert(RecruitmentInsertRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -119,13 +145,13 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    RecruitmentReply reply = RecruitmentReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void update(RecruitmentProto.UpdateRequest req, StreamObserver<RecruitmentProto.Reply> responseObserver) {
+  public void update(RecruitmentUpdateRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -157,13 +183,13 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    RecruitmentReply reply = RecruitmentReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void status(RecruitmentProto.StatusRequest req, StreamObserver<RecruitmentProto.Reply> responseObserver) {
+  public void status(RecruitmentStatusRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -181,13 +207,13 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    RecruitmentReply reply = RecruitmentReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void get(RecruitmentProto.GetRequest req, StreamObserver<RecruitmentProto.Reply> responseObserver) {
+  public void get(RecruitmentGetRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -214,13 +240,13 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    RecruitmentReply reply = RecruitmentReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void search(RecruitmentProto.SearchRequest req, StreamObserver<RecruitmentProto.Reply> responseObserver) {
+  public void search(RecruitmentSearchRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -276,14 +302,14 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    RecruitmentReply reply = RecruitmentReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
 
   @Override
-  public void keywordSearch(RecruitmentProto.KeywordSearchRequest req, StreamObserver<RecruitmentProto.Reply> responseObserver) {
+  public void keywordSearch(RecruitmentKeywordSearchRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -340,13 +366,13 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    RecruitmentReply reply = RecruitmentReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void enterpriseList(RecruitmentProto.EnterpriseListRequest req, StreamObserver<RecruitmentProto.Reply> responseObserver) {
+  public void enterpriseList(RecruitmentEnterpriseListRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -370,13 +396,13 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    RecruitmentReply reply = RecruitmentReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void enterpriseSearch(RecruitmentProto.EnterpriseSearchRequest req, StreamObserver<RecruitmentProto.Reply> responseObserver) {
+  public void enterpriseSearch(RecruitmentEnterpriseSearchRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -424,13 +450,13 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    RecruitmentReply reply = RecruitmentReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void subject(RecruitmentProto.SubjectRequest req, StreamObserver<RecruitmentProto.Reply> responseObserver) {
+  public void subject(RecruitmentSubjectRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -451,13 +477,13 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    RecruitmentReply reply = RecruitmentReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void jobFairEntList(RecruitmentProto.JobFairEntListRequest req, StreamObserver<RecruitmentProto.Reply> responseObserver) {
+  public void jobFairEntList(RecruitmentJobFairEntListRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -479,13 +505,13 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    RecruitmentReply reply = RecruitmentReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void jobFairList(RecruitmentProto.JobFairListRequest req, StreamObserver<RecruitmentProto.Reply> responseObserver) {
+  public void jobFairList(RecruitmentJobFairListRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -502,7 +528,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    RecruitmentProto.Reply reply = RecruitmentProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    RecruitmentReply reply = RecruitmentReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }

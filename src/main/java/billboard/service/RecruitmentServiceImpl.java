@@ -62,20 +62,6 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
         ResultSet rs = ps.executeQuery();
         List<Map<String, Object>> result = Persistence.getList(rs);
         resp = new Gson().toJson(result);
-      } else if ("byCategory".equals(req.getCategory())) {
-        String sql = """
-            select *
-            from recruitment
-            where position(? in industry) > 0
-            and status = '在招'
-            order by id desc
-            limit 100
-            """;
-        PreparedStatement ps = cnx.prepareStatement(sql);
-        ps.setString(1, req.getParamMap().get("category"));
-        ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = Persistence.getList(rs);
-        resp = new Gson().toJson(result);
       } else if ("wx-default-list".equals(req.getCategory())) {
         int page = Integer.parseInt(req.getParamMap().get("page"));
         int offset = page > 1 ? (page - 1) * 100 : 0;

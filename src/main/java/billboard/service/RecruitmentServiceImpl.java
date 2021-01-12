@@ -97,7 +97,8 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
   }
 
   @Override
-  public void insert(RecruitmentInsertRequest req, StreamObserver<RecruitmentReply> responseObserver) {
+  public void insert(RecruitmentInsertRequest req,
+      StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");

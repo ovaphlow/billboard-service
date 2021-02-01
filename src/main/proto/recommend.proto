@@ -7,11 +7,14 @@ option java_outer_classname = "RecommendProto";
 package recommend;
 
 service Recommend {
-
+  rpc filter(FilterRequest) returns (Reply) {}
   rpc list(ListRequest) returns (Reply) {}
-
   rpc get(GetRequest) returns (Reply) {}
+}
 
+message FilterRequest {
+  string filter = 1;
+  map<string, string> param = 2;
 }
 
 message ListRequest {

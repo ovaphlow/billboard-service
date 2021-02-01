@@ -9,11 +9,51 @@ import java.util.List;
 import java.util.Map;
 import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
+
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
   private static final Logger logger = LoggerFactory.getLogger(RecommendServiceImpl.class);
+
+  /**
+   * 2021-01
+   * 通用查询/列表
+   * 用于之后的接口整合，候选代码
+   */
+  @Override
+  public void filter(RecommendProto.FilterRequest req, StreamObserver<RecommendProto.Reply> responseObserver) {
+    String resp = "[]";
+    try (Connection cnx = Persistence.getConn()) {
+      if ("wx-default-list".equals(req.getFilter())) {
+        String sql = """
+            select id, uuid, category, title, date1, date2, address_level1, address_level2, publisher, qty, baomignfangshi
+            from recommend
+            where
+              position(category in ?) > 0
+              and position(? in address_level2) > 0
+              and position(? in title) > 0
+            order by date1 desc, date2
+            limit ?, 100
+            """;
+        int page = Integer.parseInt(req.getParamMap().get("page"));
+        int offset = page > 1 ? (page - 1) * 100 : 0;
+        List<Map<String, Object>> result = new QueryRunner().query(cnx, sql, new MapListHandler(),
+            req.getParamMap().get("category"),
+            req.getParamMap().get("address_level2"),
+            req.getParamMap().get("keyword"),
+            offset);
+        resp = new Gson().toJson(result);
+      }
+    } catch (Exception e) {
+      logger.error("", e);
+    }
+    RecommendProto.Reply reply = RecommendProto.Reply.newBuilder().setData(resp).build();
+    responseObserver.onNext(reply);
+    responseObserver.onCompleted();
+  }
 
   @Override
   public void list(RecommendProto.ListRequest req, StreamObserver<RecommendProto.Reply> responseObserver) {

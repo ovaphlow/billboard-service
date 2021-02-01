@@ -3,3 +3,7 @@
 build
 log
 *.log
+.classpath
+.project
+.settings
+bin

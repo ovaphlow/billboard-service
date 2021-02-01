@@ -76,7 +76,7 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
                 position(? in name) > 0
                 or enterprise_id in (select id from enterprise where position(? in name) > 0)
               )
-            order by date_refresh, id desc
+            order by date_refresh desc, id desc
             limit ?, 100
             """;
         List<Map<String, Object>> result = new QueryRunner().query(cnx, sql, new MapListHandler(),

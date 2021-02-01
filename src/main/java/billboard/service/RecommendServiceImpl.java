@@ -55,6 +55,10 @@ class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
     responseObserver.onCompleted();
   }
 
+  /**
+   * 2021-01
+   * to-do: remove procedure
+   */
   @Override
   public void list(RecommendProto.ListRequest req, StreamObserver<RecommendProto.Reply> responseObserver) {
     Gson gson = new Gson();
@@ -146,5 +150,4 @@ class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
-
 }

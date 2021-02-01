@@ -65,5 +65,4 @@ public class FeedbackServiceImpl extends FeedbackGrpc.FeedbackImplBase {
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
-
 }

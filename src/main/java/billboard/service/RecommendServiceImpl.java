@@ -24,12 +24,13 @@ class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
    * 用于之后的接口整合，候选代码
    */
   @Override
-  public void filter(RecommendProto.FilterRequest req, StreamObserver<RecommendProto.Reply> responseObserver) {
+  public void filter(RecommendFilterRequest req, StreamObserver<RecommendReply> responseObserver) {
     String resp = "[]";
     try (Connection cnx = Persistence.getConn()) {
       if ("wx-default-list".equals(req.getFilter())) {
         String sql = """
-            select id, uuid, category, title, date1, date2, address_level1, address_level2, publisher, qty, baomignfangshi
+            select id, uuid, category, title, date1, date2, address_level1, address_level2,
+              publisher, qty, baomignfangshi
             from recommend
             where
               position(category in ?) > 0
@@ -50,7 +51,7 @@ class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
     } catch (Exception e) {
       logger.error("", e);
     }
-    RecommendProto.Reply reply = RecommendProto.Reply.newBuilder().setData(resp).build();
+    RecommendReply reply = RecommendReply.newBuilder().setData(resp).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
@@ -60,7 +61,7 @@ class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
    * to-do: remove procedure
    */
   @Override
-  public void list(RecommendProto.ListRequest req, StreamObserver<RecommendProto.Reply> responseObserver) {
+  public void list(RecommendListRequest req, StreamObserver<RecommendReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -122,13 +123,13 @@ class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    RecommendProto.Reply reply = RecommendProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    RecommendReply reply = RecommendReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void get(RecommendProto.GetRequest req, StreamObserver<RecommendProto.Reply> responseObserver) {
+  public void get(RecommendGetRequest req, StreamObserver<RecommendReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -146,7 +147,7 @@ class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    RecommendProto.Reply reply = RecommendProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    RecommendReply reply = RecommendReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }

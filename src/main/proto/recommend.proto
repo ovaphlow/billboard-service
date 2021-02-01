@@ -1,23 +1,23 @@
 syntax = "proto3";
 
-// option java_multiple_files = true;
+option java_multiple_files = true;
 option java_package = "billboard.service";
 option java_outer_classname = "RecommendProto";
 
 package recommend;
 
 service Recommend {
-  rpc filter(FilterRequest) returns (Reply) {}
-  rpc list(ListRequest) returns (Reply) {}
-  rpc get(GetRequest) returns (Reply) {}
+  rpc filter(RecommendFilterRequest) returns (RecommendReply) {}
+  rpc list(RecommendListRequest) returns (RecommendReply) {}
+  rpc get(RecommendGetRequest) returns (RecommendReply) {}
 }
 
-message FilterRequest {
+message RecommendFilterRequest {
   string filter = 1;
   map<string, string> param = 2;
 }
 
-message ListRequest {
+message RecommendListRequest {
   bool category1 = 1;
   bool category2 = 2;
   bool category3 = 3;
@@ -25,10 +25,10 @@ message ListRequest {
   bool category5 = 5;
 }
 
-message GetRequest {
+message RecommendGetRequest {
   uint32 id = 1;
   string uuid = 2;
 }
 
 
-message Reply { string data = 1; }
+message RecommendReply { string data = 1; }

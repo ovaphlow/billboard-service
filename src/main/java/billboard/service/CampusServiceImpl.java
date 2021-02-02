@@ -49,20 +49,24 @@ public class CampusServiceImpl extends CampusGrpc.CampusImplBase {
       String sql = """
           select id, uuid, title, address_level3, address_level2, date, school, category
           from campus
-          where date >= curdate()
-            and position(? in address_level2) > 0
+          where
+            -- date >= curdate()
+            position(? in address_level2) > 0
             and (category = ? or category = ?)
             and (position(? in title) > 0 or position(? in school) > 0)
           order by date
-          limit 200
+          limit ?, 20
           """;
+      int page = Integer.parseInt(req.getFilterMap().get("page"));
+      int offset = page > 1 ? (page - 1) * 20 : 0;
       List<Map<String, Object>> result = new QueryRunner().query(cnx, sql,
           new MapListHandler(),
           req.getFilterMap().get("city"),
           Boolean.parseBoolean(req.getFilterMap().get("category1")) ? "宣讲会" : "",
           Boolean.parseBoolean(req.getFilterMap().get("category2")) ? "双选会" : "",
           req.getFilterMap().get("keyword"),
-          req.getFilterMap().get("keyword"));
+          req.getFilterMap().get("keyword"),
+          offset);
       resp.put("content", result);
     } catch (Exception e) {
       logger.error("", e);

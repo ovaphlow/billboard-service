@@ -37,10 +37,10 @@ class RecommendServiceImpl extends RecommendGrpc.RecommendImplBase {
               and position(? in address_level2) > 0
               and position(? in title) > 0
             order by date1 desc, date2
-            limit ?, 100
+            limit ?, 50
             """;
         int page = Integer.parseInt(req.getParamMap().get("page"));
-        int offset = page > 1 ? (page - 1) * 100 : 0;
+        int offset = page > 1 ? (page - 1) * 50 : 0;
         List<Map<String, Object>> result = new QueryRunner().query(cnx, sql, new MapListHandler(),
             req.getParamMap().get("category"),
             req.getParamMap().get("address_level2"),

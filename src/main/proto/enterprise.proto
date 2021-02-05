@@ -1,35 +1,30 @@
 syntax = "proto3";
 
-// option java_multiple_files = true;
+option java_multiple_files = true;
 option java_package = "billboard.service";
 option java_outer_classname = "EnterpriseProto";
 
 package enterprise;
 
 service Enterprise {
-
-  rpc get(GetRequest) returns (Reply) {}
-
-  rpc check(CheckRequest) returns (Reply) {}
-
-  rpc update(UpdateRequest) returns (Reply) {}
-
-  rpc subject(SubjectRequest) returns (Reply) {}
-
-  rpc JobFairList(JobFairListRequest) returns (Reply) {}
+  rpc get(EnterpriseGetRequest) returns (EnterpriseReply) {}
+  rpc check(EnterpriseCheckRequest) returns (EnterpriseReply) {}
+  rpc update(EnterpriseUpdateRequest) returns (EnterpriseReply) {}
+  rpc subject(EnterpriseSubjectRequest) returns (EnterpriseReply) {}
+  rpc JobFairList(EnterpriseJobFairListRequest) returns (EnterpriseReply) {}
 }
 
-message GetRequest {
+message EnterpriseGetRequest {
   uint32 id = 1;
   string uuid = 2;
 }
 
-message CheckRequest {
+message EnterpriseCheckRequest {
   uint32 id = 1;
   string uuid = 2;
 }
 
-message UpdateRequest {
+message EnterpriseUpdateRequest {
   string yingyezhizhao = 1;
   string faren = 2;
   string zhuceriqi = 3;
@@ -48,12 +43,12 @@ message UpdateRequest {
   string uuid = 16;
 }
 
-message SubjectRequest {
+message EnterpriseSubjectRequest {
   string name = 1;
 }
 
-message JobFairListRequest {
+message EnterpriseJobFairListRequest {
   uint32 job_fair_id = 1;
 }
 
-message Reply { string data = 1; }
+message EnterpriseReply { string data = 1; }

@@ -12,6 +12,7 @@ service Recruitment {
   rpc filter(RecruitmentFilterRequest) returns (RecruitmentReply) {}
   rpc insert(RecruitmentInsertRequest) returns (RecruitmentReply) {}
   rpc update(RecruitmentUpdateRequest) returns (RecruitmentReply) {}
+  rpc update2(RecruitmentUpdate2Request) returns (RecruitmentReply) {}
   rpc search(RecruitmentSearchRequest) returns (RecruitmentReply) {}
   rpc keywordSearch(RecruitmentKeywordSearchRequest) returns (RecruitmentReply) {}
   rpc status(RecruitmentStatusRequest) returns (RecruitmentReply) {}
@@ -63,6 +64,11 @@ message RecruitmentUpdateRequest {
   string category = 13;
   string industry = 14;
   string position = 15;
+}
+
+message RecruitmentUpdate2Request {
+  string option = 1;
+  map<string, string> param = 2;
 }
 
 message RecruitmentStatusRequest {

@@ -16,7 +16,7 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
    private static final Logger logger = LoggerFactory.getLogger(EnterpriseServiceImpl.class);
 
   @Override
-  public void get(EnterpriseProto.GetRequest req, StreamObserver<EnterpriseProto.Reply> responseObserver) {
+  public void get(EnterpriseGetRequest req, StreamObserver<EnterpriseReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -40,13 +40,13 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    EnterpriseProto.Reply reply = EnterpriseProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    EnterpriseReply reply = EnterpriseReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void check(EnterpriseProto.CheckRequest req, StreamObserver<EnterpriseProto.Reply> responseObserver) {
+  public void check(EnterpriseCheckRequest req, StreamObserver<EnterpriseReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -68,13 +68,13 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    EnterpriseProto.Reply reply = EnterpriseProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    EnterpriseReply reply = EnterpriseReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void update(EnterpriseProto.UpdateRequest req, StreamObserver<EnterpriseProto.Reply> responseObserver) {
+  public void update(EnterpriseUpdateRequest req, StreamObserver<EnterpriseReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -107,13 +107,13 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    EnterpriseProto.Reply reply = EnterpriseProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    EnterpriseReply reply = EnterpriseReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void subject(EnterpriseProto.SubjectRequest req, StreamObserver<EnterpriseProto.Reply> responseObserver){
+  public void subject(EnterpriseSubjectRequest req, StreamObserver<EnterpriseReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -130,13 +130,13 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    EnterpriseProto.Reply reply = EnterpriseProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    EnterpriseReply reply = EnterpriseReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void jobFairList(EnterpriseProto.JobFairListRequest req, StreamObserver<EnterpriseProto.Reply> responseObserver) {
+  public void jobFairList(EnterpriseJobFairListRequest req, StreamObserver<EnterpriseReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -159,7 +159,7 @@ public class EnterpriseServiceImpl extends EnterpriseGrpc.EnterpriseImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    EnterpriseProto.Reply reply = EnterpriseProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    EnterpriseReply reply = EnterpriseReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }

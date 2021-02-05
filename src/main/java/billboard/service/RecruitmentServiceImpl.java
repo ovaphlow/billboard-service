@@ -180,6 +180,27 @@ public class RecruitmentServiceImpl extends RecruitmentGrpc.RecruitmentImplBase 
   }
 
   @Override
+  public void update2(RecruitmentUpdate2Request req, StreamObserver<RecruitmentReply> responseObserver) {
+    String resp = "";
+    try(Connection cnx = Persistence.getConn()) {
+      if ("refresh".equals(req.getOption())) {
+        String sql = """
+            update recruitment
+            set date_refresh = now()
+            where id = ?
+              and uuid = ?
+            """;
+        new QueryRunner().execute(cnx, sql, req.getParamMap().get("id"), req.getParamMap().get("uuid"));
+      }
+    } catch (Exception e) {
+      logger.error("", e);
+    }
+    RecruitmentReply reply = RecruitmentReply.newBuilder().setData(resp).build();
+    responseObserver.onNext(reply);
+    responseObserver.onCompleted();
+  }
+
+  @Override
   public void status(RecruitmentStatusRequest req, StreamObserver<RecruitmentReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();

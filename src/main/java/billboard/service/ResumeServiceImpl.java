@@ -2,6 +2,8 @@ package billboard.service;
 
 import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
+
+import org.apache.commons.dbutils.QueryRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +19,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
   private static final Logger logger = LoggerFactory.getLogger(ResumeServiceImpl.class);
 
   @Override
-  public void get(ResumeProto.GetRequest req, StreamObserver<ResumeProto.Reply> responseObserver) {
+  public void get(ResumeGetRequest req, StreamObserver<ResumeReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -39,13 +41,13 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    ResumeReply reply = ResumeReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void user(ResumeProto.UserRequest req, StreamObserver<ResumeProto.Reply> responseObserver) {
+  public void user(ResumeUserRequest req, StreamObserver<ResumeReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -67,13 +69,13 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    ResumeReply reply = ResumeReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void update(ResumeProto.UpdateRequest req, StreamObserver<ResumeProto.Reply> responseObserver) {
+  public void update(ResumeUpdateRequest req, StreamObserver<ResumeReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -111,13 +113,13 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    ResumeReply reply = ResumeReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void status(ResumeProto.StatusRequest req, StreamObserver<ResumeProto.Reply> responseObserver) {
+  public void status(ResumeStatusRequest req, StreamObserver<ResumeReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -135,35 +137,38 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    ResumeReply reply = ResumeReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void init(ResumeProto.InitRequest req, StreamObserver<ResumeProto.Reply> responseObserver) {
+  public void init(ResumeInitRequest req, StreamObserver<ResumeReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
     try (Connection conn = Persistence.getConn()) {
-      String sql = "insert into resume (common_user_id,uuid) value (?,uuid())";
-      try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, req.getCommonUserId());
-        boolean rs = ps.execute();
-        resp.put("content", rs);
-      }
+      String sql = """
+          insert into resume (
+            common_user_id, uuid, ziwopingjia, career, record
+          )
+          value (
+            ?, uuid(), '', '[]', '[]'
+          )
+          """;
+      new QueryRunner().execute(conn, sql, req.getCommonUserId());
     } catch (Exception e) {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    ResumeReply reply = ResumeReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void retrieval(ResumeProto.RetrievalRequest req, StreamObserver<ResumeProto.Reply> responseObserver) {
+  public void retrieval(ResumeRetrievalRequest req, StreamObserver<ResumeReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -208,13 +213,13 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    ResumeReply reply = ResumeReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void recommend(ResumeProto.RecommendRequest req, StreamObserver<ResumeProto.Reply> responseObserver) {
+  public void recommend(ResumeRecommendRequest req, StreamObserver<ResumeReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -260,13 +265,13 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    ResumeReply reply = ResumeReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void check(ResumeProto.CheckRequest req, StreamObserver<ResumeProto.Reply> responseObserver) {
+  public void check(ResumeCheckRequest req, StreamObserver<ResumeReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -296,7 +301,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    ResumeProto.Reply reply = ResumeProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    ResumeReply reply = ResumeReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }

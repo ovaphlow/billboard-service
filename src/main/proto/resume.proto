@@ -1,42 +1,33 @@
 syntax = "proto3";
 
-// option java_multiple_files = true;
+option java_multiple_files = true;
 option java_package = "billboard.service";
 option java_outer_classname = "ResumeProto";
 
 package resume;
 
 service Resume {
-
-  rpc get(GetRequest) returns (Reply) {}
-
-  rpc user(UserRequest) returns (Reply) {}
-
-  rpc update(UpdateRequest) returns (Reply) {}
-
-  rpc init(InitRequest) returns (Reply) {}
-
-  rpc status(StatusRequest) returns (Reply) {}
-
-  rpc retrieval(RetrievalRequest) returns (Reply) {}
-
-  rpc recommend(RecommendRequest) returns (Reply) {}
-
-  rpc check(CheckRequest) returns (Reply) {}
-
+  rpc get(ResumeGetRequest) returns (ResumeReply) {}
+  rpc user(ResumeUserRequest) returns (ResumeReply) {}
+  rpc update(ResumeUpdateRequest) returns (ResumeReply) {}
+  rpc init(ResumeInitRequest) returns (ResumeReply) {}
+  rpc status(ResumeStatusRequest) returns (ResumeReply) {}
+  rpc retrieval(ResumeRetrievalRequest) returns (ResumeReply) {}
+  rpc recommend(ResumeRecommendRequest) returns (ResumeReply) {}
+  rpc check(ResumeCheckRequest) returns (ResumeReply) {}
 }
 
-message GetRequest {
+message ResumeGetRequest {
   uint32 id = 1;
   string uuid = 2;
 }
 
-message UserRequest {
+message ResumeUserRequest {
   uint32 common_user_id = 1;
   string uuid = 2;
 }
 
-message UpdateRequest {
+message ResumeUpdateRequest {
   string name = 1;
   string phone = 2;
   string email = 3;
@@ -56,19 +47,21 @@ message UpdateRequest {
   string ziwopingjia = 17;
   string common_user_id = 18;
   string uuid = 19;
+  map<string, string> career = 20;
+  map<string, string> record = 21;
 }
 
-message StatusRequest {
+message ResumeStatusRequest {
   string status = 1;
   uint32 id = 2;
   string uuid = 3;
 }
 
-message InitRequest {
+message ResumeInitRequest {
   uint32 common_user_id = 1;
 }
 
-message RetrievalRequest {
+message ResumeRetrievalRequest {
   string day = 1;
   string name = 2;
   string qiwanghangye = 3;
@@ -77,7 +70,7 @@ message RetrievalRequest {
   string education = 6;
 }
 
-message RecommendRequest {
+message ResumeRecommendRequest {
   string day = 1;
   string enterprise_id = 2;
   string name = 3;
@@ -87,9 +80,9 @@ message RecommendRequest {
   string education = 7;
 }
 
-message CheckRequest {
+message ResumeCheckRequest {
   uint32 id = 1;
   string uuid = 2;
 }
 
-message Reply { string data = 1; }
+message ResumeReply { string data = 1; }

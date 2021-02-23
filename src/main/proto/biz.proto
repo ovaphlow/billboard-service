@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "billboard.service";
+option java_outer_classname = "BizProto";
+
+package biz;
+
+service Candidate {
+  rpc filter (CandidateFilterRequest) returns (BizReply) {}
+}
+
+message CandidateFilterRequest {
+  string filter = 1;
+  map<string, string> param = 2;
+}
+
+service Resume2102 {}
+
+service Employer {
+  rpc filter (EmployerFilterRequest) returns (BizReply) {}
+}
+
+message EmployerFilterRequest {
+  string filter = 1;
+  map<string, string> param = 2;
+}
+
+service Job {
+  rpc filter (JobFilterRequest) returns (BizReply) {}
+}
+
+message JobFilterRequest {
+  string filter = 1;
+  map<string, string> param = 2;
+}
+
+service Send {}
+
+service Interview {}
+
+message BizReply {
+  string data = 1;
+}

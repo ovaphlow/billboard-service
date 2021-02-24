@@ -39,21 +39,32 @@ public class Resume2102ServiceImpl extends Resume2102Grpc.Resume2102ImplBase {
   public void filter(Resume2102FilterRequest req, StreamObserver<BizReply> responseObserver) {
     String resp = "[]";
     try (Connection cnx = Persistence.getConn()) {
-      if ("employer-recommend".equals(req.getFilter())) {
+      if ("employer-filter".equals(req.getFilter())) {
+        int page = Integer.parseInt(req.getParamMap().get("page")) | 0;
+        int offset = page > 0 ? page * 20 : 0;
         String sql = """
+            select *
+            from resume
+            where education = ?
+              and status = '公开'
+              and position(? in address2) > 0
+              and position(? in qiwanghangye) > 0
+              and position(? in qiwangzhiwei) > 0
+            order by date_refresh desc
+            limit ?, 20
             """;
         List<Map<String, Object>> result = new QueryRunner().query(cnx, sql, new MapListHandler(),
-            req.getParamMap().get(""),// 活跃度
-            req.getParamMap().get(""),// 行业
-            req.getParamMap().get(""),// 职位
-            req.getParamMap().get(""),// 地点
-            req.getParamMap().get(""));// 学历
+            req.getParamMap().get("education"),
+            req.getParamMap().get("address2"),
+            req.getParamMap().get("qiwanghangye"),
+            req.getParamMap().get("qiwangzhiwei"),
+            offset);
         resp = new Gson().toJson(result);
       }
     } catch (Exception e) {
       logger.error("", e);
     }
-    BizReply reply = BizReply.newBuilder().setData(new Gson().toJson(resp)).build();
+    BizReply reply = BizReply.newBuilder().setData(resp).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }

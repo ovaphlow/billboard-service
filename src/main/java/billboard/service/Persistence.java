@@ -22,10 +22,10 @@ public class Persistence {
     config.setUsername("ovaphlow");
     config.setPassword("ovaph@HD.1123");
     config.setConnectionTimeout(3000);
-//    config.setMinimumIdle(0);
-//    config.setIdleTimeout(10000);
+    config.setMinimumIdle(0);
+    config.setIdleTimeout(10000);
     config.setMaximumPoolSize(4);
-    config.setMaxLifetime(60000);
+    // config.setMaxLifetime(60000);// 默认值：30000
     config.addDataSourceProperty("cachePrepStmts", "true");
     config.addDataSourceProperty("prepStmtCacheSize", "250");
     config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");

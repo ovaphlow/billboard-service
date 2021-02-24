@@ -142,6 +142,10 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
     responseObserver.onCompleted();
   }
 
+  /**
+   * 2021-02
+   * to-do: remove
+   */
   @Override
   public void init(ResumeInitRequest req, StreamObserver<ResumeReply> responseObserver) {
     Gson gson = new Gson();
@@ -167,6 +171,10 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
     responseObserver.onCompleted();
   }
 
+  /**
+   * 2021-02
+   * to-do: remove
+   */
   @Override
   public void retrieval(ResumeRetrievalRequest req, StreamObserver<ResumeReply> responseObserver) {
     Gson gson = new Gson();
@@ -218,6 +226,10 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
     responseObserver.onCompleted();
   }
 
+  /**
+   * 2021-02
+   * to-do: remove
+   */
   @Override
   public void recommend(ResumeRecommendRequest req, StreamObserver<ResumeReply> responseObserver) {
     Gson gson = new Gson();
@@ -305,5 +317,4 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
-
 }

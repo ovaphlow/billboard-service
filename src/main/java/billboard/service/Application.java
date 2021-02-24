@@ -20,6 +20,7 @@ public class Application {
         .addService(new CommonUserServiceImpl())
         .addService(new CommonUserFileServiceImpl())
         .addService(new ResumeServiceImpl())
+        .addService(new Resume2102ServiceImpl())
         .addService(new BannerServiceImpl())
         .addService(new RecruitmentServiceImpl())
         .addService(new FavoriteServiceImpl())

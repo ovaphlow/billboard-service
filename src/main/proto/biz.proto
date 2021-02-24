@@ -15,7 +15,13 @@ message CandidateFilterRequest {
   map<string, string> param = 2;
 }
 
-service Resume2102 {}
+service Resume2102 {
+  rpc init(Resume2102InitRequest) returns (BizReply) {}
+}
+
+message Resume2102InitRequest {
+  uint32 candidate_id = 1;
+}
 
 service Employer {
   rpc filter (EmployerFilterRequest) returns (BizReply) {}

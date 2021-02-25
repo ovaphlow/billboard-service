@@ -50,7 +50,7 @@ public class Resume2102ServiceImpl extends Resume2102Grpc.Resume2102ImplBase {
               and position(? in address2) > 0
               and position(? in qiwanghangye) > 0
               and position(? in qiwangzhiwei) > 0
-            order by date_refresh desc
+            order by date_update desc
             limit ?, 20
             """;
         List<Map<String, Object>> result = new QueryRunner().query(cnx, sql, new MapListHandler(),

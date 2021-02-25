@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 option java_multiple_files = true;
 option java_package = "billboard.service";
 option java_outer_classname = "BizProto";
@@ -39,11 +41,11 @@ message EmployerFilterRequest {
 }
 
 service Job {
-  rpc filter (JobFilterRequest) returns (BizReply) {}
+  rpc update (JobUpdateRequest) returns (google.protobuf.Empty) {}
 }
 
-message JobFilterRequest {
-  string filter = 1;
+message JobUpdateRequest {
+  string option = 1;
   map<string, string> param = 2;
 }
 

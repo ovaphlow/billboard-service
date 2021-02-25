@@ -20,6 +20,7 @@ message CandidateFilterRequest {
 service Resume2102 {
   rpc init (Resume2102InitRequest) returns (BizReply) {}
   rpc filter (Resume2102FilterRequest) returns (BizReply) {}
+  rpc update (Resume2102UpdateRequest) returns (google.protobuf.Empty) {}
 }
 
 message Resume2102InitRequest {
@@ -28,6 +29,11 @@ message Resume2102InitRequest {
 
 message Resume2102FilterRequest {
   string filter = 1;
+  map<string, string> param = 2;
+}
+
+message Resume2102UpdateRequest {
+  string option = 1;
   map<string, string> param = 2;
 }
 

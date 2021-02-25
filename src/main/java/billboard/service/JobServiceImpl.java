@@ -9,7 +9,6 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class JobServiceImpl extends JobGrpc.JobImplBase {
   private static final Logger logger = LoggerFactory.getLogger(JobServiceImpl.class);
 

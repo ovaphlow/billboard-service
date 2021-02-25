@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.protobuf.Empty;
+
 import io.grpc.stub.StreamObserver;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.MapListHandler;
@@ -66,6 +68,22 @@ public class Resume2102ServiceImpl extends Resume2102Grpc.Resume2102ImplBase {
     }
     BizReply reply = BizReply.newBuilder().setData(resp).build();
     responseObserver.onNext(reply);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void update(Resume2102UpdateRequest req, StreamObserver<Empty> responseObserver) {
+    try (Connection cnx = Persistence.getConn()) {
+      if ("refresh".equals(req.getOption())) {
+        String sql = """
+            update resume set date_update = now() where common_user_id = ?
+            """;
+        new QueryRunner().execute(cnx, sql, Integer.parseInt(req.getParamMap().get("candidate_id")));
+      }
+    } catch (Exception e) {
+      logger.error("", e);
+    }
+    responseObserver.onNext(null);
     responseObserver.onCompleted();
   }
 }

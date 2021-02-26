@@ -47,8 +47,8 @@ message ResumeUpdateRequest {
   string ziwopingjia = 17;
   string common_user_id = 18;
   string uuid = 19;
-  map<string, string> career = 20;
-  map<string, string> record = 21;
+  string career = 20;
+  string record = 21;
 }
 
 message ResumeStatusRequest {

@@ -74,7 +74,54 @@ public class Resume2102ServiceImpl extends Resume2102Grpc.Resume2102ImplBase {
   @Override
   public void update(Resume2102UpdateRequest req, StreamObserver<Empty> responseObserver) {
     try (Connection cnx = Persistence.getConn()) {
-      if ("refresh".equals(req.getOption())) {
+      if ("".equals(req.getOption())) {
+        String sql = """
+            update resume
+            set name = ?,
+              phone = ?,
+              email = ?,
+              gender = ?,
+              birthday = ?,
+              school = ?,
+              education = ?,
+              date_begin = ?,
+              date_end = ?,
+              major = ?,
+              qiwangzhiwei = ?,
+              qiwanghangye = ?,
+              address1 = ?,
+              address2 = ?,
+              address3 = ?,
+              yixiangchengshi = ?,
+              ziwopingjia = ?,
+              career = ?,
+              record = ?
+            where common_user_id = ?
+              and uuid = ?
+            """;
+        new QueryRunner().execute(cnx, sql,
+            req.getParamMap().get("name"),
+            req.getParamMap().get("phone"),
+            req.getParamMap().get("email"),
+            req.getParamMap().get("gender"),
+            req.getParamMap().get("birthday"),
+            req.getParamMap().get("school"),
+            req.getParamMap().get("education"),
+            req.getParamMap().get("date_begin"),
+            req.getParamMap().get("date_end"),
+            req.getParamMap().get("major"),
+            req.getParamMap().get("qiwangzhiwei"),
+            req.getParamMap().get("qiwanghangye"),
+            req.getParamMap().get("address1"),
+            req.getParamMap().get("address2"),
+            req.getParamMap().get("address3"),
+            req.getParamMap().get("yixiangchengshi"),
+            req.getParamMap().get("ziwopingjia"),
+            req.getParamMap().get("career"),
+            req.getParamMap().get("record"),
+            req.getParamMap().get("common_user_id"),
+            req.getParamMap().get("uuid"));
+      } else if ("refresh".equals(req.getOption())) {
         String sql = """
             update resume set date_update = now() where common_user_id = ?
             """;

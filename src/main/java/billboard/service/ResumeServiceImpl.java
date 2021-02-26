@@ -80,6 +80,7 @@ public class ResumeServiceImpl extends ResumeGrpc.ResumeImplBase {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
+    logger.info("{}", req);
     try (Connection conn = Persistence.getConn()) {
       String sql = "update resume set name=?,phone=?, email=?,gender=?,birthday=?,school=?, education=?,\n"
           + "    date_begin=?, date_end=?,major=?,qiwangzhiwei=?,qiwanghangye=?,address1=?,address2=?,\n"

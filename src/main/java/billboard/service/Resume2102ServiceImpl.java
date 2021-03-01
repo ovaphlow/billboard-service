@@ -10,6 +10,7 @@ import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.MapListHandler;
+import org.apache.commons.dbutils.handlers.MapHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +62,36 @@ public class Resume2102ServiceImpl extends Resume2102Grpc.Resume2102ImplBase {
             req.getParamMap().get("qiwanghangye"),
             req.getParamMap().get("qiwangzhiwei"),
             offset);
+        resp = new Gson().toJson(result);
+      }
+    } catch (Exception e) {
+      logger.error("", e);
+    }
+    BizReply reply = BizReply.newBuilder().setData(resp).build();
+    responseObserver.onNext(reply);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void get(Resume2102GetRequest req, StreamObserver<BizReply> responseObserver) {
+    String resp = "{}";
+    try (Connection cnx = Persistence.getConn()) {
+      if ("".equals(req.getOption())) {
+        String sql = "select * from resume where id = ? and uuid = ?";
+        Map<String, Object> result = new QueryRunner().query(cnx, sql, new MapHandler(),
+            Integer.parseInt(req.getParamMap().get("id")),
+            req.getParamMap().get("uuid"));
+        resp = new Gson().toJson(result);
+      } else if ("by-user".equals(req.getOption())) {
+        String sql = """
+            select *
+            from resume
+            where common_user_id = ?
+              and (select uuid from common_user where id = common_user_id) = ?
+            """;
+        Map<String, Object> result = new QueryRunner().query(cnx, sql, new MapHandler(),
+            Integer.parseInt(req.getParamMap().get("id")),
+            req.getParamMap().get("uuid"));
         resp = new Gson().toJson(result);
       }
     } catch (Exception e) {

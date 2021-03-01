@@ -93,6 +93,21 @@ public class Resume2102ServiceImpl extends Resume2102Grpc.Resume2102ImplBase {
             Integer.parseInt(req.getParamMap().get("id")),
             req.getParamMap().get("uuid"));
         resp = new Gson().toJson(result);
+      } else if ("valid".equals(req.getOption())) {
+        String sql = """
+            select name, phone, email, gender, birthday
+            from resume
+            where common_user_id = ?
+            """;
+        Map<String, Object> result = new QueryRunner().query(cnx, sql, new MapHandler(),
+            Integer.parseInt(req.getParamMap().get("id")));
+        if ("".equals(result.get("name")) || "".equals(result.get("phone")) ||
+            "".equals(result.get("email")) || "".equals(result.get("gender")) ||
+            "".equals(result.get("birthday"))) {
+          resp = "false";
+        } else {
+          resp = "true";
+        }
       }
     } catch (Exception e) {
       logger.error("", e);

@@ -156,7 +156,14 @@ public class Resume2102ServiceImpl extends Resume2102Grpc.Resume2102ImplBase {
         String sql = """
             update resume set date_update = now() where common_user_id = ?
             """;
-        new QueryRunner().execute(cnx, sql, Integer.parseInt(req.getParamMap().get("candidate_id")));
+        new QueryRunner().execute(cnx, sql,
+            Integer.parseInt(req.getParamMap().get("candidate_id")));
+      } else if ("status".equals(req.getOption())) {
+        String sql = "update resume set status = ? where common_user_id = ? and uuid = ?";
+        new QueryRunner().execute(cnx, sql,
+            req.getParamMap().get("status"),
+            Integer.parseInt(req.getParamMap().get("candidate_id")),
+            req.getParamMap().get("uuid"));
       }
     } catch (Exception e) {
       logger.error("", e);

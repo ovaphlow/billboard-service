@@ -179,6 +179,42 @@ public class Resume2102ServiceImpl extends Resume2102Grpc.Resume2102ImplBase {
             req.getParamMap().get("status"),
             Integer.parseInt(req.getParamMap().get("candidate_id")),
             req.getParamMap().get("uuid"));
+      } else if ("save-career".equals(req.getOption())) {
+        String sql = """
+            update resume
+            set career = json_array_append(career, '$', ?)
+            where common_user_id = ?
+            """;
+        new QueryRunner().execute(cnx, sql,
+            req.getParamMap().get("data"),
+            Integer.parseInt(req.getParamMap().get("candidate_id")));
+      } else if ("update-career".equals(req.getOption())) {
+        String sql = """
+            update resume
+            set career = ?
+            where common_user_id = ?
+            """;
+        new QueryRunner().execute(cnx, sql,
+            req.getParamMap().get("data"),
+            Integer.parseInt(req.getParamMap().get("candidate_id")));
+      } else if ("save-record".equals(req.getOption())) {
+        String sql = """
+            update resume
+            set record = json_array_append(record, '$', ?)
+            where common_user_id = ?
+            """;
+        new QueryRunner().execute(cnx, sql,
+            req.getParamMap().get("data"),
+            Integer.parseInt(req.getParamMap().get("candidate_id")));
+      } else if ("save-record".equals(req.getOption())) {
+        String sql = """
+            update resume
+            set record = ?
+            where common_user_id = ?
+            """;
+        new QueryRunner().execute(cnx, sql,
+            req.getParamMap().get("data"),
+            Integer.parseInt(req.getParamMap().get("candidate_id")));
       }
     } catch (Exception e) {
       logger.error("", e);

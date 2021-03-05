@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "billboard.service";
+option java_outer_classname = "HypervisorProto";
+
+package hypervisor;
+
+service Staff {
+  rpc signIn (StaffSignInRequest) returns (HypervisorReply) {}
+}
+
+message StaffSignInRequest {
+  map<string, string> data = 1;
+}
+
+message HypervisorReply { string data = 1; }

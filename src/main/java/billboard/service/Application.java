@@ -17,6 +17,7 @@ public class Application {
     server = ServerBuilder.forPort(port)
         .maxInboundMessageSize(1024 * 1024 * 256)
         .addService(new DemoServiceImpl())
+        .addService(new CandidateServiceImpl())
         .addService(new CommonUserServiceImpl())
         .addService(new CommonUserFileServiceImpl())
         .addService(new ResumeServiceImpl())
@@ -41,6 +42,7 @@ public class Application {
         .addService(new EmailServiceImpl())
         .addService(new ChartServiceImpl())
         .addService(new JobFairServiceImpl())
+        .addService(new HypervisorStaffServiceImpl())
         .build()
         .start();
     logger.info("服务启动于端口 " + port);

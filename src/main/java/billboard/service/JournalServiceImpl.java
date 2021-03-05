@@ -2,6 +2,9 @@ package billboard.service;
 
 import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
+
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -231,4 +234,24 @@ public class JournalServiceImpl extends JournalGrpc.JournalImplBase {
     responseObserver.onCompleted();
   }
 
+  @Override
+  public void filter(JournalProto.FilterRequest req,
+      StreamObserver<JournalProto.Reply> responseObserver) {
+    String resp = "[]";
+    try (Connection cnx = Persistence.getConn()) {
+      String sql = """
+          select *
+          from ovaphlow.logbook
+          where ref_id in (%s)
+          """;
+      sql = String.format(sql, req.getParamMap().get("list"));
+      List<Map<String, Object>> result = new QueryRunner().query(cnx, sql, new MapListHandler());
+      resp = new Gson().toJson(result);
+    } catch (Exception e) {
+      logger.error("", e);
+    }
+    JournalProto.Reply reply = JournalProto.Reply.newBuilder().setData(resp).build();
+    responseObserver.onNext(reply);
+    responseObserver.onCompleted();
+  }
 }

@@ -10,11 +10,17 @@ package biz;
 
 service Candidate {
   rpc filter (CandidateFilterRequest) returns (BizReply) {}
+  rpc statistics (CandidateStatisticsRequest) returns (BizReply) {}
 }
 
 message CandidateFilterRequest {
   string filter = 1;
   map<string, string> param = 2;
+}
+
+message CandidateStatisticsRequest {
+  string option = 1;
+  map<string, string> data = 2;
 }
 
 service Resume2102 {

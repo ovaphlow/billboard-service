@@ -7,21 +7,14 @@ option java_outer_classname = "JournalProto";
 package journal;
 
 service Journal {
-
   rpc get(GetRequest) returns (Reply) {}
-
   rpc list(ListRequest) returns (Reply) {}
-
   rpc delete(DeleteRequest) returns (Reply) {}
-
   rpc insert(InsertRequest) returns (Reply) {}
-
   rpc loginList(LoginListRequest) returns (Reply) {}
-
   rpc editList(EditListRequest) returns (Reply) {}
-
   rpc insertEdit(InsertEditRequest) returns (Reply) {}
-
+  rpc filter (FilterRequest) returns (Reply) {}
 }
 
 message GetRequest {
@@ -68,6 +61,11 @@ message EditListRequest {
 message LoginListRequest {
   uint32 id = 1;
   string category = 2;
+}
+
+message FilterRequest {
+  string option = 1;
+  map<string, string> param = 2;
 }
 
 message Reply { string data = 1; }

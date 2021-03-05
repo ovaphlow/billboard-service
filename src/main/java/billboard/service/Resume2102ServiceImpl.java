@@ -165,7 +165,7 @@ public class Resume2102ServiceImpl extends Resume2102Grpc.Resume2102ImplBase {
             req.getParamMap().get("ziwopingjia"),
             req.getParamMap().get("career"),
             req.getParamMap().get("record"),
-            req.getParamMap().get("common_user_id"),
+            Integer.parseInt(req.getParamMap().get("common_user_id")),
             req.getParamMap().get("uuid"));
       } else if ("refresh".equals(req.getOption())) {
         String sql = """

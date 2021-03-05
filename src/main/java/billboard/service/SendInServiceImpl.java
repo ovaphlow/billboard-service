@@ -12,26 +12,16 @@ import org.slf4j.LoggerFactory;
 
 import io.grpc.stub.StreamObserver;
 
-public class CandidateServiceImpl extends CandidateGrpc.CandidateImplBase {
-  private static final Logger logger = LoggerFactory.getLogger(CandidateServiceImpl.class);
+public class SendInServiceImpl extends SendInGrpc.SendInImplBase {
+  private static final Logger logger = LoggerFactory.getLogger(SendInServiceImpl.class);
 
   @Override
-  public void statistic(CandidateStatisticRequest req,
-      StreamObserver<BizReply> responseObserver) {
-    String resp = "";
+  public void statistic(SendInStatisticRequest req, StreamObserver<BizReply> responseObserver) {
+    String resp = "{}";
     try (Connection cnx = Persistence.getConn()) {
       if ("hypervisor-all".equals(req.getOption())) {
-        String sql = "select count(*) as qty from common_user";
+        String sql = "select count(*) as qty from delivery";
         Map<String, Object> result = new QueryRunner().query(cnx, sql, new MapHandler());
-        resp = new Gson().toJson(result);
-      } else if ("hypervisor-today".equals(req.getOption())) {
-        String sql = """
-            select count(*) as qty
-            from common_user
-            where position(? in date_create) > 0
-            """;
-        Map<String, Object> result = new QueryRunner().query(cnx, sql, new MapHandler(),
-            req.getDataMap().get("date"));
         resp = new Gson().toJson(result);
       }
     } catch (Exception e) {

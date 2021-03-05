@@ -10,7 +10,7 @@ package biz;
 
 service Candidate {
   rpc filter (CandidateFilterRequest) returns (BizReply) {}
-  rpc statistics (CandidateStatisticsRequest) returns (BizReply) {}
+  rpc statistic (CandidateStatisticRequest) returns (BizReply) {}
 }
 
 message CandidateFilterRequest {
@@ -18,7 +18,7 @@ message CandidateFilterRequest {
   map<string, string> param = 2;
 }
 
-message CandidateStatisticsRequest {
+message CandidateStatisticRequest {
   string option = 1;
   map<string, string> data = 2;
 }
@@ -51,6 +51,7 @@ message Resume2102UpdateRequest {
 
 service Employer {
   rpc filter (EmployerFilterRequest) returns (BizReply) {}
+  rpc statistic (EmployerStatisticRequest) returns (BizReply) {}
 }
 
 message EmployerFilterRequest {
@@ -58,8 +59,14 @@ message EmployerFilterRequest {
   map<string, string> param = 2;
 }
 
+message EmployerStatisticRequest {
+  string option = 1;
+  map<string, string> data = 2;
+}
+
 service Job {
   rpc update (JobUpdateRequest) returns (google.protobuf.Empty) {}
+  rpc statistic (JobStatisticRequest) returns (BizReply) {}
 }
 
 message JobUpdateRequest {
@@ -67,7 +74,19 @@ message JobUpdateRequest {
   map<string, string> param = 2;
 }
 
-service Send {}
+message JobStatisticRequest {
+  string option = 1;
+  map<string, string> data = 2;
+}
+
+service SendIn {
+  rpc statistic (SendInStatisticRequest) returns (BizReply) {}
+}
+
+message SendInStatisticRequest {
+  string option = 1;
+  map<string, string> data = 2;
+}
 
 service Interview {}
 

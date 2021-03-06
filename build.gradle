@@ -61,7 +61,7 @@ tasks.withType(JavaCompile) {
 
 task service(type: CreateStartScripts) {
   mainClassName = 'billboard.service.Application'
-  applicationName = 'billboard.service.202012-1'
+  applicationName = 'billboard-service'
   outputDir = new File(project.buildDir, 'tmp')
   classpath = startScripts.classpath
 }

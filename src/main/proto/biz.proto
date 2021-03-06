@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 option java_multiple_files = true;
 option java_package = "billboard.service";
 option java_outer_classname = "BizProto";
@@ -8,6 +10,7 @@ package biz;
 
 service Candidate {
   rpc filter (CandidateFilterRequest) returns (BizReply) {}
+  rpc statistic (CandidateStatisticRequest) returns (BizReply) {}
 }
 
 message CandidateFilterRequest {
@@ -15,9 +18,16 @@ message CandidateFilterRequest {
   map<string, string> param = 2;
 }
 
+message CandidateStatisticRequest {
+  string option = 1;
+  map<string, string> data = 2;
+}
+
 service Resume2102 {
   rpc init (Resume2102InitRequest) returns (BizReply) {}
   rpc filter (Resume2102FilterRequest) returns (BizReply) {}
+  rpc get (Resume2102GetRequest) returns (BizReply) {}
+  rpc update (Resume2102UpdateRequest) returns (google.protobuf.Empty) {}
 }
 
 message Resume2102InitRequest {
@@ -29,8 +39,19 @@ message Resume2102FilterRequest {
   map<string, string> param = 2;
 }
 
+message Resume2102GetRequest {
+  string option = 1;
+  map<string, string> param = 2;
+}
+
+message Resume2102UpdateRequest {
+  string option = 1;
+  map<string, string> param = 2;
+}
+
 service Employer {
   rpc filter (EmployerFilterRequest) returns (BizReply) {}
+  rpc statistic (EmployerStatisticRequest) returns (BizReply) {}
 }
 
 message EmployerFilterRequest {
@@ -38,16 +59,34 @@ message EmployerFilterRequest {
   map<string, string> param = 2;
 }
 
-service Job {
-  rpc filter (JobFilterRequest) returns (BizReply) {}
+message EmployerStatisticRequest {
+  string option = 1;
+  map<string, string> data = 2;
 }
 
-message JobFilterRequest {
-  string filter = 1;
+service Job {
+  rpc update (JobUpdateRequest) returns (google.protobuf.Empty) {}
+  rpc statistic (JobStatisticRequest) returns (BizReply) {}
+}
+
+message JobUpdateRequest {
+  string option = 1;
   map<string, string> param = 2;
 }
 
-service Send {}
+message JobStatisticRequest {
+  string option = 1;
+  map<string, string> data = 2;
+}
+
+service SendIn {
+  rpc statistic (SendInStatisticRequest) returns (BizReply) {}
+}
+
+message SendInStatisticRequest {
+  string option = 1;
+  map<string, string> data = 2;
+}
 
 service Interview {}
 

@@ -17,15 +17,16 @@ public class Persistence {
 
   static {
     HikariConfig config = new HikariConfig();
-//    config.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/hengda-billboard?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC");
+    // config.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/billboard?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC");
     config.setJdbcUrl("jdbc:mysql://211.159.150.3:3306/hengda-billboard?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC");
+    // config.setJdbcUrl("jdbc:mysql:/82.156.226.151:3306/billboard?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC");
     config.setUsername("ovaphlow");
     config.setPassword("ovaph@HD.1123");
     config.setConnectionTimeout(3000);
-//    config.setMinimumIdle(0);
-//    config.setIdleTimeout(10000);
+    config.setMinimumIdle(0);
+    config.setIdleTimeout(10000);
     config.setMaximumPoolSize(4);
-    config.setMaxLifetime(60000);
+    // config.setMaxLifetime(60000);// 默认值：30000
     config.addDataSourceProperty("cachePrepStmts", "true");
     config.addDataSourceProperty("prepStmtCacheSize", "250");
     config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");

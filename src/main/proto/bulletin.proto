@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "billboard.service";
+option java_outer_classname = "BulletinProto";
+
+package bulletin;
+
+message BulletinReply {
+  string data = 1;
+}
+
+service Notification {
+  rpc statistic (NotificationStatisticRequest) returns (BulletinReply) {}
+}
+
+message NotificationStatisticRequest {
+  string option = 1;
+  map<string, string> data = 2;
+}

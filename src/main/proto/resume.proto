@@ -7,77 +7,14 @@ option java_outer_classname = "ResumeProto";
 package resume;
 
 service Resume {
-  rpc get(ResumeGetRequest) returns (ResumeReply) {}
-  rpc user(ResumeUserRequest) returns (ResumeReply) {}
-  rpc update(ResumeUpdateRequest) returns (ResumeReply) {}
-  rpc init(ResumeInitRequest) returns (ResumeReply) {}
   rpc status(ResumeStatusRequest) returns (ResumeReply) {}
-  rpc retrieval(ResumeRetrievalRequest) returns (ResumeReply) {}
-  rpc recommend(ResumeRecommendRequest) returns (ResumeReply) {}
   rpc check(ResumeCheckRequest) returns (ResumeReply) {}
-}
-
-message ResumeGetRequest {
-  uint32 id = 1;
-  string uuid = 2;
-}
-
-message ResumeUserRequest {
-  uint32 common_user_id = 1;
-  string uuid = 2;
-}
-
-message ResumeUpdateRequest {
-  string name = 1;
-  string phone = 2;
-  string email = 3;
-  string gender = 4;
-  string birthday = 5;
-  string school = 6;
-  string education = 7;
-  string date_begin = 8;
-  string date_end = 9;
-  string major = 10;
-  string qiwangzhiwei = 11;
-  string qiwanghangye = 12;
-  string address1 = 13;
-  string address2 = 14;
-  string address3 = 15;
-  string yixiangchengshi = 16;
-  string ziwopingjia = 17;
-  string common_user_id = 18;
-  string uuid = 19;
-  map<string, string> career = 20;
-  map<string, string> record = 21;
 }
 
 message ResumeStatusRequest {
   string status = 1;
   uint32 id = 2;
   string uuid = 3;
-}
-
-message ResumeInitRequest {
-  uint32 common_user_id = 1;
-}
-
-message ResumeRetrievalRequest {
-  string day = 1;
-  string name = 2;
-  string qiwanghangye = 3;
-  string qiwangzhiwei = 4;
-  string yixiangchengshi = 5;
-  string education = 6;
-}
-
-message ResumeRecommendRequest {
-  string day = 1;
-  string enterprise_id = 2;
-  string name = 3;
-  string qiwanghangye = 4;
-  string qiwangzhiwei = 5;
-  string yixiangchengshi = 6;
-  string education = 7;
 }
 
 message ResumeCheckRequest {

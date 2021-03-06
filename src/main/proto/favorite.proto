@@ -7,17 +7,11 @@ option java_outer_classname = "FavoriteProto";
 package favorite;
 
 service Favorite {
-
   rpc searchOne(SearchOneRequest) returns (Reply) {}
-
   rpc searchResume(SearchResumeRequest) returns (Reply) {}
-
   rpc list(ListRequest) returns (Reply) {}
-
   rpc delete(DeleteRequest) returns (Reply) {}
-
   rpc insert(InsertRequest) returns (Reply) {}
-
 }
 
 message ListRequest {

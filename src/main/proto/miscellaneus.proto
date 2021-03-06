@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+// import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "billboard.service";
+option java_outer_classname = "MiscProto";
+
+package miscellaneus;
+
+message MiscReply {
+  string data = 1;
+}
+
+service Favorite2021 {
+  rpc filter (Favorite2021FilterRequest) returns (MiscReply) {}
+}
+
+message Favorite2021FilterRequest {
+  string option = 1;
+  map<string, string> data = 2;
+}

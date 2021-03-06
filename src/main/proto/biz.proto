@@ -10,12 +10,18 @@ package biz;
 
 service Candidate {
   rpc filter (CandidateFilterRequest) returns (BizReply) {}
+  rpc get (CandidateGetRequest) returns (BizReply) {}
   rpc statistic (CandidateStatisticRequest) returns (BizReply) {}
 }
 
 message CandidateFilterRequest {
-  string filter = 1;
-  map<string, string> param = 2;
+  string option = 1;
+  map<string, string> data = 2;
+}
+
+message CandidateGetRequest {
+  uint32 id = 1;
+  string uuid = 2;
 }
 
 message CandidateStatisticRequest {

@@ -43,6 +43,11 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
     responseObserver.onCompleted();
   }
 
+  /**
+   * to-do: 分离各表数据
+   * @param req
+   * @param responseObserver
+   */
   @Override
   public void recruitmentList(DeliveryProto.RecruitmentListRequest req, StreamObserver<DeliveryProto.Reply> responseObserver) {
     Gson gson = new Gson();
@@ -70,6 +75,11 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
     responseObserver.onCompleted();
   }
 
+  /**
+   * to-do: 分离各表数据
+   * @param req
+   * @param responseObserver
+   */
   @Override
   public void details(DeliveryProto.DetailsRequest req, StreamObserver<DeliveryProto.Reply> responseObserver) {
     Gson gson = new Gson();
@@ -103,6 +113,11 @@ public class DeliveryServiceImpl extends DeliveryGrpc.DeliveryImplBase {
     responseObserver.onCompleted();
   }
 
+  /**
+   * to-do: 分离各表数据
+   * @param req
+   * @param responseObserver
+   */
   @Override
   public void userDeliveryList(DeliveryProto.UserDeliveryListRequest req, StreamObserver<DeliveryProto.Reply> responseObserver) {
     Gson gson = new Gson();

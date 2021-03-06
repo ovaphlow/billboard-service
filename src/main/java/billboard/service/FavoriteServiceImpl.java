@@ -83,6 +83,11 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
     responseObserver.onCompleted();
   }
 
+  /**
+   * to-do: 分离各表数据
+   * @param req
+   * @param responseObserver
+   */
   @Override
   public void searchResume(FavoriteProto.SearchResumeRequest req, StreamObserver<FavoriteProto.Reply> responseObserver) {
     Gson gson = new Gson();

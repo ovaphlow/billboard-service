@@ -142,5 +142,4 @@ public class CommonUserScheduleImpl extends CommonUserScheduleGrpc.CommonUserSch
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
-
 }

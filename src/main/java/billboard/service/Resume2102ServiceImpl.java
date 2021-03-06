@@ -206,7 +206,7 @@ public class Resume2102ServiceImpl extends Resume2102Grpc.Resume2102ImplBase {
         new QueryRunner().execute(cnx, sql,
             req.getParamMap().get("data"),
             Integer.parseInt(req.getParamMap().get("candidate_id")));
-      } else if ("save-record".equals(req.getOption())) {
+      } else if ("update-record".equals(req.getOption())) {
         String sql = """
             update resume
             set record = ?

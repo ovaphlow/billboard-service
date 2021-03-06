@@ -51,12 +51,18 @@ message Resume2102UpdateRequest {
 
 service Employer {
   rpc filter (EmployerFilterRequest) returns (BizReply) {}
+  rpc filterUser (EmployerFilterUserRequest) returns (BizReply) {}
   rpc statistic (EmployerStatisticRequest) returns (BizReply) {}
 }
 
 message EmployerFilterRequest {
-  string filter = 1;
-  map<string, string> param = 2;
+  string option = 1;
+  map<string, string> data = 2;
+}
+
+message EmployerFilterUserRequest {
+  string option = 1;
+  map<string, string> data = 2;
 }
 
 message EmployerStatisticRequest {

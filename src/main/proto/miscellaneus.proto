@@ -25,7 +25,7 @@ service Feedback {
   rpc insert (FeedbackInsertRequest) returns (MiscReply) {}
   rpc filter (FeedbackFilterRequest) returns (MiscReply) {}
   rpc list (FeedbackListRequest) returns (MiscReply) {}
-  rpc reply (FeedbackReplyRequest) returns (google.protobuf.Empty) {}
+  rpc update (FeedbackUpdateRequest) returns (google.protobuf.Empty) {}
 }
 
 message FeedbackInsertRequest {
@@ -47,7 +47,7 @@ message FeedbackListRequest {
   string user_category = 2;
 }
 
-message FeedbackReplyRequest {
+message FeedbackUpdateRequest {
   string option = 1;
   map<string, string> data = 2;
 }

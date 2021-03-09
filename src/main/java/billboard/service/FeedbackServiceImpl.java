@@ -105,7 +105,7 @@ public class FeedbackServiceImpl extends FeedbackGrpc.FeedbackImplBase {
   }
 
   @Override
-  public void reply(FeedbackReplyRequest req, StreamObserver<Empty> responseObserver) {
+  public void update(FeedbackUpdateRequest req, StreamObserver<Empty> responseObserver) {
     try (Connection cnx = Persistence.getConn()) {
       String sql = """
           update feedback

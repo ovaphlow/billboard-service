@@ -39,7 +39,6 @@ public class Application {
         .addService(new SendInServiceImpl())
         .addService(new DeliveryServiceImpl())
         .addService(new FeedbackServiceImpl())
-        .addService(new ReportServiceImpl())
         .addService(new EmployerServiceImpl())
         .addService(new EnterpriseServiceImpl())
         .addService(new EnterpriseUserServiceImpl())

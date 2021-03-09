@@ -1,7 +1,12 @@
 package billboard.service;
 
 import com.google.gson.Gson;
+import com.google.protobuf.Empty;
+
 import io.grpc.stub.StreamObserver;
+
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +20,11 @@ import java.util.List;
 public class FeedbackServiceImpl extends FeedbackGrpc.FeedbackImplBase {
   private static Logger logger = LoggerFactory.getLogger(FeedbackServiceImpl.class);
 
+  /**
+   * 2021-03: 未整理
+   */
   @Override
-  public void insert(FeedbackProto.InsertRequest req, StreamObserver<FeedbackProto.Reply> responseObserver) {
+  public void insert(FeedbackInsertRequest req, StreamObserver<MiscReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -37,13 +45,43 @@ public class FeedbackServiceImpl extends FeedbackGrpc.FeedbackImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    FeedbackProto.Reply reply = FeedbackProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    MiscReply reply = MiscReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void list(FeedbackProto.ListRequest req, StreamObserver<FeedbackProto.Reply> responseObserver) {
+  public void filter(FeedbackFilterRequest req, StreamObserver<MiscReply> responseObserver) {
+    String resp = "[]";
+    try (Connection cnx = Persistence.getConn()) {
+      if ("hypervisor".equals(req.getOption())) {
+        String sql = """
+            select *
+            from feedback
+            where position(? in category) > 0
+              and position(? in user_category) > 0
+              and position(? in status) > 0
+            order by id desc
+            limit 100""";
+        List<Map<String, Object>> result = new QueryRunner().query(cnx, sql, new MapListHandler(),
+            req.getDataMap().get("category"),
+            req.getDataMap().get("user_category"),
+            req.getDataMap().get("status"));
+        resp = new Gson().toJson(result);
+      }
+    } catch (Exception e) {
+      logger.error("", e);
+    }
+    MiscReply reply = MiscReply.newBuilder().setData(resp).build();
+    responseObserver.onNext(reply);
+    responseObserver.onCompleted();
+  }
+
+  /**
+   * 2021-03: 未整理
+   */
+  @Override
+  public void list(FeedbackListRequest req, StreamObserver<MiscReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -61,8 +99,24 @@ public class FeedbackServiceImpl extends FeedbackGrpc.FeedbackImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    FeedbackProto.Reply reply = FeedbackProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    MiscReply reply = MiscReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void reply(FeedbackReplyRequest req, StreamObserver<Empty> responseObserver) {
+    try (Connection cnx = Persistence.getConn()) {
+      String sql = """
+          update feedback
+          set status = '已处理'
+          where id = ?
+          """;
+      new QueryRunner().execute(cnx, sql);
+    } catch (Exception e) {
+      logger.error("", e);
+    }
+    responseObserver.onNext(null);
     responseObserver.onCompleted();
   }
 }

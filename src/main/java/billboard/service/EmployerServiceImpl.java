@@ -67,6 +67,15 @@ public class EmployerServiceImpl extends EmployerGrpc.EmployerImplBase {
         sql = String.format(sql, req.getDataMap().get("list"));
         List<Map<String, Object>> result = new QueryRunner().query(cnx, sql, new MapListHandler());
         resp = new Gson().toJson(result);
+      } else if ("by-id-list".equals(req.getOption())) {
+        String sql = """
+            select id, uuid, enterprise_id, enterprise_uuid, email, phone, name
+            from enterprise_user
+            where id in (%s)
+            """;
+        sql = String.format(sql, req.getDataMap().get("list"));
+        List<Map<String, Object>> result = new QueryRunner().query(cnx, sql, new MapListHandler());
+        resp = new Gson().toJson(result);
       }
     } catch (Exception e) {
       logger.error("", e);

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-// import "google/protobuf/empty.proto";
+import "google/protobuf/empty.proto";
 
 option java_multiple_files = true;
 option java_package = "billboard.service";
@@ -17,6 +17,37 @@ service Favorite2021 {
 }
 
 message Favorite2021FilterRequest {
+  string option = 1;
+  map<string, string> data = 2;
+}
+
+service Feedback {
+  rpc insert (FeedbackInsertRequest) returns (MiscReply) {}
+  rpc filter (FeedbackFilterRequest) returns (MiscReply) {}
+  rpc list (FeedbackListRequest) returns (MiscReply) {}
+  rpc reply (FeedbackReplyRequest) returns (google.protobuf.Empty) {}
+}
+
+message FeedbackInsertRequest {
+  uint32 user_id = 1;
+  string user_uuid = 2;
+  string user_category = 3;
+  string content = 4;
+  string datime = 5;
+  string category = 6;
+}
+
+message FeedbackFilterRequest {
+  string option = 1;
+  map<string, string> data = 2;
+}
+
+message FeedbackListRequest {
+  uint32 user_id = 1;
+  string user_category = 2;
+}
+
+message FeedbackReplyRequest {
   string option = 1;
   map<string, string> data = 2;
 }

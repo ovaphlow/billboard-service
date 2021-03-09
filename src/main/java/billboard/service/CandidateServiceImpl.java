@@ -34,6 +34,14 @@ public class CandidateServiceImpl extends CandidateGrpc.CandidateImplBase {
             req.getDataMap().get("keyword"),
             req.getDataMap().get("keyword"));
         resp = new Gson().toJson(result);
+      } else if ("by-id-list".equals(req.getOption())) {
+        String sql = """
+            select id, uuid, name, phone, email
+            from common_user
+            where id in (%s)""";
+        sql = String.format(sql, req.getDataMap().get("list"));
+        List<Map<String, Object>> result = new QueryRunner().query(cnx, sql, new MapListHandler());
+        resp = new Gson().toJson(result);
       }
     } catch (Exception e) {
       logger.error("", e);

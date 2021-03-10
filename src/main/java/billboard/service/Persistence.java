@@ -17,7 +17,7 @@ public class Persistence {
 
   static {
     HikariConfig config = new HikariConfig();
-    String cnx_string = String.format("jdbc:mysql://%s/%s?",
+    String cnx_string = String.format("jdbc:mysql://%s/%s?%s",
         Configuration.PERSISTENCE_HOST,
         Configuration.PERSISTENCE_DATABASE,
         "useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC");

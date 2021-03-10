@@ -51,3 +51,9 @@ message FeedbackUpdateRequest {
   string option = 1;
   map<string, string> data = 2;
 }
+
+service Chart {
+  rpc entHome (ChartEntHomeRequest) returns (MiscReply) {}
+}
+
+message ChartEntHomeRequest { string data = 1; }

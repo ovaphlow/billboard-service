@@ -57,7 +57,7 @@ public class CampusServiceImpl extends CampusGrpc.CampusImplBase {
           order by date
           limit ?, 20
           """;
-      int page = Integer.parseInt(req.getFilterMap().get("page"));
+      int page = Integer.parseInt(req.getFilterMap().get("page")) | 1;
       int offset = page > 1 ? (page - 1) * 20 : 0;
       List<Map<String, Object>> result = new QueryRunner().query(cnx, sql,
           new MapListHandler(),

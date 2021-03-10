@@ -18,7 +18,7 @@ public class ChartServiceImpl extends ChartGrpc.ChartImplBase {
   private static final Logger logger = LoggerFactory.getLogger(ChartServiceImpl.class);
 
   @Override
-  public void entHome(ChartRequest req, StreamObserver<ChartReply> responseObserver) {
+  public void entHome(ChartEntHomeRequest req, StreamObserver<MiscReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -40,7 +40,7 @@ public class ChartServiceImpl extends ChartGrpc.ChartImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    ChartReply reply = ChartReply.newBuilder().setData(gson.toJson(resp)).build();
+    MiscReply reply = MiscReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }

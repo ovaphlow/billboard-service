@@ -29,7 +29,6 @@ public class Application {
         .addService(new DemoServiceImpl())
         .addService(new CandidateServiceImpl())
         .addService(new CommonUserServiceImpl())
-        .addService(new CommonUserFileServiceImpl())
         .addService(new Resume2102ServiceImpl())
         .addService(new BannerServiceImpl())
         .addService(new JobServiceImpl())

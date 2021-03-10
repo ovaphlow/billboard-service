@@ -20,7 +20,7 @@ public class EmailServiceImpl extends EmailGrpc.EmailImplBase {
   private static final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 
   @Override
-  public void insert(EmailProto.InsertRequest req, StreamObserver<EmailProto.Reply> responseObserver) {
+  public void insert(EmailInsertRequest req, StreamObserver<MiscReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -41,13 +41,13 @@ public class EmailServiceImpl extends EmailGrpc.EmailImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    EmailProto.Reply reply = EmailProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    MiscReply reply = MiscReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void code(EmailProto.CodeRequest req, StreamObserver<EmailProto.Reply> responseObserver) {
+  public void code(EmailCodeRequest req, StreamObserver<MiscReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -82,13 +82,13 @@ public class EmailServiceImpl extends EmailGrpc.EmailImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    EmailProto.Reply reply = EmailProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    MiscReply reply = MiscReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void checkRecover(EmailProto.CheckRecoverRequest req, StreamObserver<EmailProto.Reply> responseObserver) {
+  public void checkRecover(EmailCheckRecoverRequest req, StreamObserver<MiscReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     List<Map<String, Object>> result = new ArrayList<>();
@@ -120,9 +120,8 @@ public class EmailServiceImpl extends EmailGrpc.EmailImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    EmailProto.Reply reply = EmailProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    MiscReply reply = MiscReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
-
 }

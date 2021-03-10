@@ -26,7 +26,6 @@ public class Application {
   private void start(int port) throws IOException {
     server = ServerBuilder.forPort(port)
         .maxInboundMessageSize(1024 * 1024 * 256)
-        .addService(new DemoServiceImpl())
         .addService(new CandidateServiceImpl())
         .addService(new CommonUserServiceImpl())
         .addService(new Resume2102ServiceImpl())

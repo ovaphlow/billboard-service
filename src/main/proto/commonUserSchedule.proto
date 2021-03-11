@@ -7,17 +7,11 @@ option java_outer_classname = "CommonUserScheduleProto";
 package commonUserSchedule;
 
 service CommonUserSchedule {
-
   rpc get(GetRequest) returns (Reply) {}
-
   rpc user(UserRequest) returns (Reply) {}
-
   rpc count(CountRequest) returns (Reply) {}
-
   rpc insert(InsertRequest) returns (Reply) {}
-
   rpc delete(DeleteRequest) returns (Reply) {}
-
 }
 
 message GetRequest {

@@ -33,36 +33,15 @@ message CandidateStatisticRequest {
   map<string, string> data = 2;
 }
 
-service Resume2102 {
-  rpc init (Resume2102InitRequest) returns (BizReply) {}
-  rpc filter (Resume2102FilterRequest) returns (BizReply) {}
-  rpc get (Resume2102GetRequest) returns (BizReply) {}
-  rpc update (Resume2102UpdateRequest) returns (google.protobuf.Empty) {}
-}
-
-message Resume2102InitRequest {
-  uint32 candidate_id = 1;
-}
-
-message Resume2102FilterRequest {
-  string filter = 1;
-  map<string, string> param = 2;
-}
-
-message Resume2102GetRequest {
-  string option = 1;
-  map<string, string> param = 2;
-}
-
-message Resume2102UpdateRequest {
-  string option = 1;
-  map<string, string> param = 2;
-}
-
 service Employer {
-  rpc filter (EmployerFilterRequest) returns (BizReply) {}
-  rpc filterUser (EmployerFilterUserRequest) returns (BizReply) {}
-  rpc statistic (EmployerStatisticRequest) returns (BizReply) {}
+  rpc filter(EmployerFilterRequest) returns (BizReply) {}
+  rpc filterUser(EmployerFilterUserRequest) returns (BizReply) {}
+  rpc statistic(EmployerStatisticRequest) returns (BizReply) {}
+  rpc get(EmployerGetRequest) returns (BizReply) {}
+  rpc check(EmployerCheckRequest) returns (BizReply) {}
+  rpc update(EmployerUpdateRequest) returns (BizReply) {}
+  rpc subject(EmployerSubjectRequest) returns (BizReply) {}
+  rpc jobFairList(EmployerJobFairListRequest) returns (BizReply) {}
 }
 
 message EmployerFilterRequest {
@@ -78,6 +57,73 @@ message EmployerFilterUserRequest {
 message EmployerStatisticRequest {
   string option = 1;
   map<string, string> data = 2;
+}
+
+message EmployerGetRequest {
+  uint32 id = 1;
+  string uuid = 2;
+}
+
+message EmployerCheckRequest {
+  uint32 id = 1;
+  string uuid = 2;
+}
+
+message EmployerUpdateRequest {
+  string yingyezhizhao = 1;
+  string faren = 2;
+  string zhuceriqi = 3;
+  string zhuziguimo = 4;
+  string yuangongshuliang = 5;
+  string yingyezhizhao_tu = 6;
+  string phone = 7;
+  string address1 = 8;
+  string address2 = 9;
+  string address3 = 10;
+  string address4 = 11;
+  string industry = 12;
+  string intro = 13;
+  string url = 14;
+  uint32 id = 15;
+  string uuid = 16;
+}
+
+message EmployerSubjectRequest {
+  string name = 1;
+}
+
+message EmployerJobFairListRequest {
+  uint32 job_fair_id = 1;
+}
+
+service Interview {
+  rpc entList(InterviewEntListRequest) returns (BizReply) {}
+  rpc commonList(InterviewCommonListRequest) returns (BizReply) {}
+  rpc commonTotal(InterviewCommonTotalRequest) returns (BizReply) {}
+  rpc insert(InterviewInsertRequest) returns (BizReply) {}
+}
+
+message InterviewEntListRequest {
+  uint32 id = 1;
+}
+
+message InterviewCommonListRequest {
+  uint32 id = 1;
+}
+
+message InterviewCommonTotalRequest {
+  uint32 id = 1;
+}
+
+message InterviewInsertRequest {
+  uint32 recruitment_id = 1;
+  uint32 common_user_id = 2;
+  string address = 3;
+  string mianshishijian = 4;
+  string luxian = 5;
+  string remark = 6;
+  string phone1 = 7;
+  string phone2 = 8;
 }
 
 service Job {
@@ -162,6 +208,32 @@ message JobFairListRequest {
   uint32 job_fair_id = 1;
 }
 
+service Resume2102 {
+  rpc init (Resume2102InitRequest) returns (BizReply) {}
+  rpc filter (Resume2102FilterRequest) returns (BizReply) {}
+  rpc get (Resume2102GetRequest) returns (BizReply) {}
+  rpc update (Resume2102UpdateRequest) returns (google.protobuf.Empty) {}
+}
+
+message Resume2102InitRequest {
+  uint32 candidate_id = 1;
+}
+
+message Resume2102FilterRequest {
+  string filter = 1;
+  map<string, string> param = 2;
+}
+
+message Resume2102GetRequest {
+  string option = 1;
+  map<string, string> param = 2;
+}
+
+message Resume2102UpdateRequest {
+  string option = 1;
+  map<string, string> param = 2;
+}
+
 service SendIn {
   rpc statistic (SendInStatisticRequest) returns (BizReply) {}
 }
@@ -169,34 +241,4 @@ service SendIn {
 message SendInStatisticRequest {
   string option = 1;
   map<string, string> data = 2;
-}
-
-service Interview {
-  rpc entList(InterviewEntListRequest) returns (BizReply) {}
-  rpc commonList(InterviewCommonListRequest) returns (BizReply) {}
-  rpc commonTotal(InterviewCommonTotalRequest) returns (BizReply) {}
-  rpc insert(InterviewInsertRequest) returns (BizReply) {}
-}
-
-message InterviewEntListRequest {
-  uint32 id = 1;
-}
-
-message InterviewCommonListRequest {
-  uint32 id = 1;
-}
-
-message InterviewCommonTotalRequest {
-  uint32 id = 1;
-}
-
-message InterviewInsertRequest {
-  uint32 recruitment_id = 1;
-  uint32 common_user_id = 2;
-  string address = 3;
-  string mianshishijian = 4;
-  string luxian = 5;
-  string remark = 6;
-  string phone1 = 7;
-  string phone2 = 8;
 }

@@ -7,25 +7,15 @@ option java_outer_classname = "EnterpriseUserProto";
 package enterpriseUser;
 
 service EnterpriseUser {
-
   rpc signIn(SignInRequest) returns (Reply) {}
-
   rpc logIn(LogInRequest) returns (Reply) {}
-
   rpc update(UpdateRequest) returns (Reply) {}
-
   rpc updatePassword(UpdatePasswordRequest) returns (Reply) {}
-
   rpc upPasswordCheck(UpPasswordCheckRequest) returns (Reply) {}
-
   rpc recover(RecoverRequest) returns (Reply) {}
-
   rpc checkEmail(CheckEmailRequest) returns (Reply) {}
-
   rpc checkPhone(CheckPhoneRequest) returns (Reply) {}
-
   rpc checkRecover(CheckRecoverRequest) returns (Reply) {}
-
 }
 
 message SignInRequest {

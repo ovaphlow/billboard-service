@@ -81,18 +81,85 @@ message EmployerStatisticRequest {
 }
 
 service Job {
-  rpc update (JobUpdateRequest) returns (google.protobuf.Empty) {}
   rpc statistic (JobStatisticRequest) returns (BizReply) {}
+  rpc filter(JobFilterRequest) returns (BizReply) {}
+  rpc insert(JobInsertRequest) returns (BizReply) {}
+  rpc get(JobGetRequest) returns (BizReply) {}
+  rpc update(JobUpdateRequest) returns (google.protobuf.Empty) {}
+  rpc enterpriseList(JobEnterpriseListRequest) returns (BizReply) {}
+  rpc enterpriseSearch(JobEnterpriseSearchRequest) returns (BizReply) {}
+  rpc subject(JobSubjectRequest) returns (BizReply) {}
+  rpc jobFairEntList(JobFairEntListRequest) returns (BizReply) {}
+  rpc jobFairList(JobFairListRequest) returns (BizReply) {}
 }
 
 message JobUpdateRequest {
   string option = 1;
-  map<string, string> param = 2;
+  map<string, string> data = 2;
 }
 
 message JobStatisticRequest {
   string option = 1;
   map<string, string> data = 2;
+}
+
+message JobGetRequest {
+  uint32 id = 1;
+  string uuid = 2;
+}
+
+message JobListRequest {}
+
+message JobFilterRequest {
+  string category = 1;
+  map<string, string> param = 2;
+}
+
+message JobInsertRequest {
+  uint32 enterprise_id = 1;
+  string enterprise_uuid = 2;
+  string name = 3;
+  string qty = 4;
+  string description = 5;
+  string requirement = 6;
+  string address1 = 7;
+  string address2 = 8;
+  string address3 = 9;
+  string salary1 = 10;
+  string salary2 = 11;
+  string education = 12;
+  string category = 13;
+  string industry = 14;
+  string position = 15;
+}
+
+message JobEnterpriseListRequest {
+  uint32 id = 1;
+  string uuid = 2;
+}
+
+message JobEnterpriseSearchRequest {
+  string enterprise_id = 1;
+  string uuid = 2;
+  string name = 3;
+  string category = 4;
+  string date = 5;
+  string status = 6;
+  string education = 7;
+}
+
+message JobSubjectRequest {
+  string subject = 1;
+}
+
+message JobFairEntListRequest {
+  uint32 job_fair_id = 1;
+  uint32 ent_id = 2;
+  string ent_uuid = 3;
+}
+
+message JobFairListRequest {
+  uint32 job_fair_id = 1;
 }
 
 service SendIn {

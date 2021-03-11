@@ -31,7 +31,6 @@ public class Application {
         .addService(new Resume2102ServiceImpl())
         .addService(new BannerServiceImpl())
         .addService(new JobServiceImpl())
-        .addService(new RecruitmentServiceImpl())
         .addService(new FavoriteServiceImpl())
         .addService(new JournalServiceImpl())
         .addService(new SendInServiceImpl())

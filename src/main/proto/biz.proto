@@ -8,6 +8,10 @@ option java_outer_classname = "BizProto";
 
 package biz;
 
+message BizReply {
+  string data = 1;
+}
+
 service Candidate {
   rpc filter (CandidateFilterRequest) returns (BizReply) {}
   rpc get (CandidateGetRequest) returns (BizReply) {}
@@ -100,8 +104,32 @@ message SendInStatisticRequest {
   map<string, string> data = 2;
 }
 
-service Interview {}
+service Interview {
+  rpc entList(InterviewEntListRequest) returns (BizReply) {}
+  rpc commonList(InterviewCommonListRequest) returns (BizReply) {}
+  rpc commonTotal(InterviewCommonTotalRequest) returns (BizReply) {}
+  rpc insert(InterviewInsertRequest) returns (BizReply) {}
+}
 
-message BizReply {
-  string data = 1;
+message InterviewEntListRequest {
+  uint32 id = 1;
+}
+
+message InterviewCommonListRequest {
+  uint32 id = 1;
+}
+
+message InterviewCommonTotalRequest {
+  uint32 id = 1;
+}
+
+message InterviewInsertRequest {
+  uint32 recruitment_id = 1;
+  uint32 common_user_id = 2;
+  string address = 3;
+  string mianshishijian = 4;
+  string luxian = 5;
+  string remark = 6;
+  string phone1 = 7;
+  string phone2 = 8;
 }

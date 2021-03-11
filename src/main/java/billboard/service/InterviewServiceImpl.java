@@ -15,11 +15,11 @@ import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
-  private static final Logger logger = LoggerFactory.getLogger(OfferServiceImpl.class);
+public class InterviewServiceImpl extends InterviewGrpc.InterviewImplBase {
+  private static final Logger logger = LoggerFactory.getLogger(InterviewServiceImpl.class);
 
   @Override
-  public void entList(OfferProto.EntListRequest req, StreamObserver<OfferProto.Reply> responseObserver) {
+  public void entList(InterviewEntListRequest req, StreamObserver<BizReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -38,13 +38,13 @@ public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    OfferProto.Reply reply = OfferProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    BizReply reply = BizReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void commonList(OfferProto.CommonListRequest req, StreamObserver<OfferProto.Reply> responseObserver) {
+  public void commonList(InterviewCommonListRequest req, StreamObserver<BizReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -69,13 +69,13 @@ public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    OfferProto.Reply reply = OfferProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    BizReply reply = BizReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void commonTotal(OfferProto.CommonTotalRequest req, StreamObserver<OfferProto.Reply> responseObserver) {
+  public void commonTotal(InterviewCommonTotalRequest req, StreamObserver<BizReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -92,13 +92,13 @@ public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    OfferProto.Reply reply = OfferProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    BizReply reply = BizReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void insert(OfferProto.InsertRequest req, StreamObserver<OfferProto.Reply> responseObserver) {
+  public void insert(InterviewInsertRequest req, StreamObserver<BizReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -122,9 +122,8 @@ public class OfferServiceImpl extends OfferGrpc.OfferImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    OfferProto.Reply reply = OfferProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    BizReply reply = BizReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
-
 }

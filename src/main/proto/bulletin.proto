@@ -14,9 +14,30 @@ message BulletinReply {
 
 service Notification {
   rpc statistic (NotificationStatisticRequest) returns (BulletinReply) {}
+  rpc filter(NotificationFilterRequest) returns (BulletinReply) {}
+  rpc list(NotificationListRequest) returns (BulletinReply) {}
+  rpc get(NotificationGetRequest) returns (BulletinReply) {}
 }
 
 message NotificationStatisticRequest {
   string option = 1;
   map<string, string> data = 2;
+}
+
+message NotificationFilterRequest {
+  string filter = 1;
+  map<string, string> param = 2;
+}
+
+message NotificationListRequest {
+  bool category1 = 1;
+  bool category2 = 2;
+  bool category3 = 3;
+  bool category4 = 4;
+  bool category5 = 5;
+}
+
+message NotificationGetRequest {
+  uint32 id = 1;
+  string uuid = 2;
 }

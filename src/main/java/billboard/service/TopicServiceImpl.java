@@ -17,7 +17,7 @@ public class TopicServiceImpl extends TopicGrpc.TopicImplBase {
   private static final Logger logger = LoggerFactory.getLogger(TopicServiceImpl.class);
 
   @Override
-  public void common(TopicProto.CommonRequest req, StreamObserver<TopicProto.Reply> responseObserver) {
+  public void common(TopicCommonRequest req, StreamObserver<BulletinReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -33,12 +33,12 @@ public class TopicServiceImpl extends TopicGrpc.TopicImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    responseObserver.onNext(TopicProto.Reply.newBuilder().setData(gson.toJson(resp)).build());
+    responseObserver.onNext(BulletinReply.newBuilder().setData(gson.toJson(resp)).build());
     responseObserver.onCompleted();
   }
 
   @Override
-  public void get(TopicProto.GetRequest req, StreamObserver<TopicProto.Reply> responseObserver) {
+  public void get(TopicGetRequest req, StreamObserver<BulletinReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -56,13 +56,13 @@ public class TopicServiceImpl extends TopicGrpc.TopicImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    TopicProto.Reply reply = TopicProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    BulletinReply reply = BulletinReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void ent(TopicProto.EntRequest req, StreamObserver<TopicProto.Reply> responseObserver) {
+  public void ent(TopicEntRequest req, StreamObserver<BulletinReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -78,7 +78,7 @@ public class TopicServiceImpl extends TopicGrpc.TopicImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    TopicProto.Reply reply = TopicProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    BulletinReply reply = BulletinReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }

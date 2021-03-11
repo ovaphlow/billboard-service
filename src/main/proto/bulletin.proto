@@ -41,3 +41,18 @@ message NotificationGetRequest {
   uint32 id = 1;
   string uuid = 2;
 }
+
+service Topic {
+  rpc common(TopicCommonRequest) returns (BulletinReply) {}
+  rpc get(TopicGetRequest) returns (BulletinReply) {}
+  rpc ent(TopicEntRequest) returns (BulletinReply) {}
+}
+
+message TopicCommonRequest {}
+
+message TopicGetRequest {
+  uint32 id = 1;
+  string uuid = 2;
+}
+
+message TopicEntRequest {}

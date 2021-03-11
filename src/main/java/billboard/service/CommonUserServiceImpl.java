@@ -461,5 +461,4 @@ public class CommonUserServiceImpl extends CommonUserGrpc.CommonUserImplBase {
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
   }
-
 }

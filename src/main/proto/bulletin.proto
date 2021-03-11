@@ -12,8 +12,36 @@ message BulletinReply {
   string data = 1;
 }
 
+service Banner {
+  rpc get(BannerGetRequest) returns (BulletinReply) {}
+  rpc detail(BannerDetailRequest) returns (BulletinReply) {}
+}
+
+message BannerGetRequest {
+  string category = 1;
+}
+
+message BannerDetailRequest {
+  uint32 id = 1;
+  string uuid = 2;
+}
+
+service Campus {
+  rpc get (CampusGetRequest) returns (BulletinReply) {}
+  rpc search (CampusSearchRequest) returns (BulletinReply) {}
+}
+
+message CampusGetRequest {
+  uint32 id = 1;
+  string uuid = 2;
+}
+
+message CampusSearchRequest {
+  map<string, string> filter = 1;
+}
+
 service Notification {
-  rpc statistic (NotificationStatisticRequest) returns (BulletinReply) {}
+  rpc statistic(NotificationStatisticRequest) returns (BulletinReply) {}
   rpc filter(NotificationFilterRequest) returns (BulletinReply) {}
   rpc list(NotificationListRequest) returns (BulletinReply) {}
   rpc get(NotificationGetRequest) returns (BulletinReply) {}

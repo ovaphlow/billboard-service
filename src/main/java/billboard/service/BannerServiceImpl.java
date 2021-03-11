@@ -17,7 +17,7 @@ public class BannerServiceImpl extends BannerGrpc.BannerImplBase {
   private static final Logger logger = LoggerFactory.getLogger(BannerServiceImpl.class);
 
   @Override
-  public void get(BannerGetRequest req, StreamObserver<BannerReply> responseObserver) {
+  public void get(BannerGetRequest req, StreamObserver<BulletinReply> responseObserver) {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
@@ -37,17 +37,13 @@ public class BannerServiceImpl extends BannerGrpc.BannerImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    BannerReply reply = BannerReply
-        .newBuilder()
-        .setData(new Gson().toJson(resp))
-        .build();
+    BulletinReply reply = BulletinReply.newBuilder().setData(new Gson().toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void detail(BannerDetailRequest req,
-      StreamObserver<BannerReply> responseObserver) {
+  public void detail(BannerDetailRequest req, StreamObserver<BulletinReply> responseObserver) {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
@@ -62,10 +58,7 @@ public class BannerServiceImpl extends BannerGrpc.BannerImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    BannerReply reply = BannerReply
-        .newBuilder()
-        .setData(new Gson().toJson(resp))
-        .build();
+    BulletinReply reply = BulletinReply.newBuilder().setData(new Gson().toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }

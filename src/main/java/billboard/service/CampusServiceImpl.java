@@ -17,7 +17,7 @@ public class CampusServiceImpl extends CampusGrpc.CampusImplBase {
   private static final Logger logger = LoggerFactory.getLogger(CampusServiceImpl.class);
 
   @Override
-  public void get(CampusGetRequest req, StreamObserver<CampusReply> responseObserver) {
+  public void get(CampusGetRequest req, StreamObserver<BulletinReply> responseObserver) {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
@@ -32,16 +32,13 @@ public class CampusServiceImpl extends CampusGrpc.CampusImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    CampusReply reply = CampusReply
-        .newBuilder()
-        .setData(new Gson().toJson(resp))
-        .build();
+    BulletinReply reply = BulletinReply.newBuilder().setData(new Gson().toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void search(CampusSearchRequest req, StreamObserver<CampusReply> responseObserver) {
+  public void search(CampusSearchRequest req, StreamObserver<BulletinReply> responseObserver) {
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
@@ -72,7 +69,7 @@ public class CampusServiceImpl extends CampusGrpc.CampusImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    CampusReply reply = CampusReply.newBuilder().setData(new Gson().toJson(resp)).build();
+    BulletinReply reply = BulletinReply.newBuilder().setData(new Gson().toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }

@@ -42,6 +42,15 @@ service Employer {
   rpc update(EmployerUpdateRequest) returns (BizReply) {}
   rpc subject(EmployerSubjectRequest) returns (BizReply) {}
   rpc jobFairList(EmployerJobFairListRequest) returns (BizReply) {}
+  rpc signUp(EmployerSignUpRequest) returns (BizReply) {}
+  rpc signIn(EmployerSignInRequest) returns (BizReply) {}
+  rpc updateUser(EmployerUpdateUserRequest) returns (BizReply) {}
+  rpc updatePassword(EmployerUpdatePasswordRequest) returns (BizReply) {}
+  rpc upPasswordCheck(EmployerUpPasswordCheckRequest) returns (BizReply) {}
+  rpc recover(EmployerRecoverRequest) returns (BizReply) {}
+  rpc checkEmail(EmployerCheckEmailRequest) returns (BizReply) {}
+  rpc checkPhone(EmployerCheckPhoneRequest) returns (BizReply) {}
+  rpc checkRecover(EmployerCheckRecoverRequest) returns (BizReply) {}
 }
 
 message EmployerFilterRequest {
@@ -94,6 +103,62 @@ message EmployerSubjectRequest {
 
 message EmployerJobFairListRequest {
   uint32 job_fair_id = 1;
+}
+
+message EmployerSignUpRequest {
+  string code = 1;
+  string email = 2;
+  string ent_name = 3;
+  string password = 4;
+  string salt = 5;
+}
+
+message EmployerSignInRequest {
+  string phone_email = 1;
+  string password = 2;
+  string ip = 3;
+  string address = 4;
+}
+
+message EmployerRecoverRequest {
+  string user_category = 1;
+  string code = 2;
+  string email =3;
+  string password = 4;
+}
+
+message EmployerUpPasswordCheckRequest {
+  uint32 id = 3;
+  string uuid = 4;
+}
+
+message EmployerUpdatePasswordRequest {
+  string password =1;
+  string salt = 2;
+  uint32 id = 3;
+  string uuid = 4;
+}
+
+message EmployerUpdateUserRequest {
+  string code = 1;
+  string email = 2;
+  string phone = 3;
+  uint32 id = 4;
+  string uuid = 5;
+}
+
+message EmployerCheckPhoneRequest {
+  uint32 id = 1;
+  string phone = 2;
+}
+
+message EmployerCheckEmailRequest {
+  uint32 id = 1;
+  string email = 2;
+}
+
+message EmployerCheckRecoverRequest {
+  string email = 1;
 }
 
 service Interview {

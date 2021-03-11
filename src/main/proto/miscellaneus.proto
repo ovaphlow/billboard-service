@@ -12,13 +12,52 @@ message MiscReply {
   string data = 1;
 }
 
-service Favorite2021 {
-  rpc filter (Favorite2021FilterRequest) returns (MiscReply) {}
+service Favorite {
+  rpc filter (FavoriteFilterRequest) returns (MiscReply) {}
+  rpc searchOne (FavoriteSearchOneRequest) returns (MiscReply) {}
+  rpc searchResume (FavoriteSearchResumeRequest) returns (MiscReply) {}
+  rpc list (FavoriteListRequest) returns (MiscReply) {}
+  rpc delete (FavoriteDeleteRequest) returns (MiscReply) {}
+  rpc insert (FavoriteInsertRequest) returns (MiscReply) {}
 }
 
-message Favorite2021FilterRequest {
+message FavoriteFilterRequest {
   string option = 1;
   map<string, string> data = 2;
+}
+
+message FavoriteListRequest {
+  string category1 = 1;
+  uint32 user_id =2;
+}
+
+message FavoriteSearchOneRequest {
+  uint32 user_id = 1;
+  uint32 data_id = 2;
+  string category1 = 3;
+  string category2 = 4;
+}
+
+message FavoriteSearchResumeRequest {
+  string user_id = 1;
+  string name = 2;
+  string qiwanghangye = 3;
+  string qiwangzhiwei = 4;
+  string yixiangchengshi = 5;
+  string education =6;
+}
+
+message FavoriteDeleteRequest {
+  uint32 id = 1;
+}
+
+message FavoriteInsertRequest {
+  uint32 user_id = 1;
+  string user_uuid = 2;
+  uint32 data_id = 3;
+  string data_uuid = 4;
+  string category1 = 5;
+  string category2 = 6;
 }
 
 service Feedback {

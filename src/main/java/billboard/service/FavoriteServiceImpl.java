@@ -2,6 +2,9 @@ package billboard.service;
 
 import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
+
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +22,31 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
   private static final Logger logger = LoggerFactory.getLogger(FavoriteServiceImpl.class);
 
   @Override
-  public void list(FavoriteProto.ListRequest req, StreamObserver<FavoriteProto.Reply> responseObserver) {
+  public void filter(FavoriteFilterRequest req, StreamObserver<MiscReply> responseObserver) {
+    String resp = "[]";
+    try (Connection cnx = Persistence.getConn()) {
+      if ("by-candidate-id-list".equals(req.getOption())) {
+        String sql = """
+            select id, category1, category2, data_id, data_uuid
+            from favorite
+            where user_id = ?
+              and category1 = '个人用户'
+            """;
+        List<Map<String, Object>> result = new QueryRunner().query(cnx, sql, new MapListHandler(),
+            req.getDataMap().get("keyword"),
+            req.getDataMap().get("keyword"));
+        resp = new Gson().toJson(result);
+      }
+    } catch (Exception e) {
+      logger.error("", e);
+    }
+    MiscReply reply = MiscReply.newBuilder().setData(resp).build();
+    responseObserver.onNext(reply);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void list(FavoriteListRequest req, StreamObserver<MiscReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -48,13 +75,13 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    FavoriteProto.Reply reply = FavoriteProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    MiscReply reply = MiscReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void searchOne(FavoriteProto.SearchOneRequest req, StreamObserver<FavoriteProto.Reply> responseObserver) {
+  public void searchOne(FavoriteSearchOneRequest req, StreamObserver<MiscReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -78,7 +105,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    FavoriteProto.Reply reply = FavoriteProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    MiscReply reply = MiscReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
@@ -89,7 +116,7 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
    * @param responseObserver
    */
   @Override
-  public void searchResume(FavoriteProto.SearchResumeRequest req, StreamObserver<FavoriteProto.Reply> responseObserver) {
+  public void searchResume(FavoriteSearchResumeRequest req, StreamObserver<MiscReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -133,13 +160,13 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    FavoriteProto.Reply reply = FavoriteProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    MiscReply reply = MiscReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void delete(FavoriteProto.DeleteRequest req, StreamObserver<FavoriteProto.Reply> responseObserver) {
+  public void delete(FavoriteDeleteRequest req, StreamObserver<MiscReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -155,13 +182,13 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    FavoriteProto.Reply reply = FavoriteProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    MiscReply reply = MiscReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void insert(FavoriteProto.InsertRequest req, StreamObserver<FavoriteProto.Reply> responseObserver) {
+  public void insert(FavoriteInsertRequest req, StreamObserver<MiscReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -183,9 +210,8 @@ public class FavoriteServiceImpl extends FavoriteGrpc.FavoriteImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    FavoriteProto.Reply reply = FavoriteProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    MiscReply reply = MiscReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
-
 }

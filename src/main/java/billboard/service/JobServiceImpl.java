@@ -273,7 +273,7 @@ public class JobServiceImpl extends JobGrpc.JobImplBase {
             set job_fair_id = json_remove(job_fair_id,
                 json_unquote(json_search(job_fair_id, 'one', ?)))
             where enterprise_id = ?
-              and id in (?)
+              and id in (%s)
             """;
         sql = String.format(sql, req.getDataMap().get("list"));
         new QueryRunner().execute(cnx, sql,

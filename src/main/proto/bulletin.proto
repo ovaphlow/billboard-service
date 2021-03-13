@@ -40,6 +40,31 @@ message CampusSearchRequest {
   map<string, string> filter = 1;
 }
 
+service Fair {
+  rpc list(FairListRequest) returns (BulletinReply) {}
+  rpc get(FairGetRequest) returns (BulletinReply) {}
+  rpc search(FairSearchRequest) returns (BulletinReply) {}
+  rpc update(FairUpdateRequest) returns (BulletinReply) {}
+}
+
+message FairListRequest {}
+
+message FairGetRequest {
+  uint32 id = 1;
+}
+
+message FairSearchRequest {
+  uint32 ent_id = 1;
+  string ent_uuid = 2;
+}
+
+message FairUpdateRequest {
+  uint32 job_fair_id = 1;
+  uint32 ent_id = 2;
+  string ent_uuid = 3;
+  string recruitment_id = 4;
+}
+
 service Notification {
   rpc statistic(NotificationStatisticRequest) returns (BulletinReply) {}
   rpc filter(NotificationFilterRequest) returns (BulletinReply) {}

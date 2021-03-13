@@ -13,11 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
-  private static final Logger logger = LoggerFactory.getLogger(JobFairServiceImpl.class);
+public class FairServiceImpl extends FairGrpc.FairImplBase {
+  private static final Logger logger = LoggerFactory.getLogger(FairServiceImpl.class);
 
   @Override
-  public void list(JobFairProto.ListRequest req, StreamObserver<JobFairProto.Reply> responseObserver) {
+  public void list(FairListRequest req, StreamObserver<BulletinReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -35,14 +35,14 @@ public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    JobFairProto.Reply reply = JobFairProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    BulletinReply reply = BulletinReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
 
   @Override
-  public void get(JobFairProto.GetRequest req, StreamObserver<JobFairProto.Reply> responseObserver) {
+  public void get(FairGetRequest req, StreamObserver<BulletinReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -63,13 +63,13 @@ public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    JobFairProto.Reply reply = JobFairProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    BulletinReply reply = BulletinReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void search(JobFairProto.SearchRequest req, StreamObserver<JobFairProto.Reply> responseObserver) {
+  public void search(FairSearchRequest req, StreamObserver<BulletinReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -90,13 +90,14 @@ public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    JobFairProto.Reply reply = JobFairProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    BulletinReply reply = BulletinReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }
 
   @Override
-  public void update(JobFairProto.UpdateRequest req, StreamObserver<JobFairProto.Reply> responseObserver) {
+  public void update(FairUpdateRequest req, StreamObserver<BulletinReply> responseObserver) {
+    logger.info("{}", req);
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
@@ -140,7 +141,7 @@ public class JobFairServiceImpl extends JobFairGrpc.JobFairImplBase {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
     }
-    JobFairProto.Reply reply = JobFairProto.Reply.newBuilder().setData(gson.toJson(resp)).build();
+    BulletinReply reply = BulletinReply.newBuilder().setData(gson.toJson(resp)).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
   }

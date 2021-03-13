@@ -47,7 +47,7 @@ public class Application {
         .addService(new NotificationServiceImpl())
         .addService(new EmailServiceImpl())
         .addService(new ChartServiceImpl())
-        .addService(new JobFairServiceImpl())
+        .addService(new FairServiceImpl())
         .addService(new HypervisorStaffServiceImpl())
         .build()
         .start();

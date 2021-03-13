@@ -192,9 +192,9 @@ message InterviewInsertRequest {
 }
 
 service Job {
-  rpc statistic (JobStatisticRequest) returns (BizReply) {}
+  rpc statistic(JobStatisticRequest) returns (BizReply) {}
   rpc filter(JobFilterRequest) returns (BizReply) {}
-  rpc insert(JobInsertRequest) returns (BizReply) {}
+  rpc save(JobSaveRequest) returns (BizReply) {}
   rpc get(JobGetRequest) returns (BizReply) {}
   rpc update(JobUpdateRequest) returns (google.protobuf.Empty) {}
   rpc enterpriseList(JobEnterpriseListRequest) returns (BizReply) {}
@@ -226,7 +226,7 @@ message JobFilterRequest {
   map<string, string> param = 2;
 }
 
-message JobInsertRequest {
+message JobSaveRequest {
   uint32 enterprise_id = 1;
   string enterprise_uuid = 2;
   string name = 3;

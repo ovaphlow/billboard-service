@@ -3,7 +3,6 @@ package billboard.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -94,40 +93,73 @@ public class JobServiceImpl extends JobGrpc.JobImplBase {
   }
 
   @Override
-  public void insert(JobInsertRequest req, StreamObserver<BizReply> responseObserver) {
+  public void save(JobSaveRequest req, StreamObserver<BizReply> responseObserver) {
     Gson gson = new Gson();
     Map<String, Object> resp = new HashMap<>();
     resp.put("message", "");
     resp.put("content", "");
     try (Connection conn = Persistence.getConn()) {
       String uuid = UUID.randomUUID().toString();
-      String sql = "insert into recruitment ( enterprise_id, enterprise_uuid, name, qty, description, requirement,"
-          + "address1, address2, address3, date, salary1, salary2, education, category,"
-          + " industry, position, uuid ) VALUE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-      try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-        ps.setInt(1, req.getEnterpriseId());
-        ps.setString(2, req.getEnterpriseUuid());
-        ps.setString(3, req.getName());
-        ps.setString(4, req.getQty());
-        ps.setString(5, req.getDescription());
-        ps.setString(6, req.getRequirement());
-        ps.setString(7, req.getAddress1());
-        ps.setString(8, req.getAddress2());
-        ps.setString(9, req.getAddress3());
-        ps.setString(10, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-        ps.setString(11, req.getSalary1());
-        ps.setString(12, req.getSalary2());
-        ps.setString(13, req.getEducation());
-        ps.setString(14, req.getCategory());
-        ps.setString(15, req.getIndustry());
-        ps.setString(16, req.getPosition());
-        ps.setString(17, uuid);
-        ps.executeUpdate();
-        ResultSet rs = ps.getGeneratedKeys();
-        if (rs.next()) {
-          resp.put("content", Map.of("id", rs.getInt(1), "uuid", uuid));
-        }
-      }
+      String sql = """
+          insert into recruitment (
+            enterprise_id,
+            enterprise_uuid,
+            name,
+            qty,
+            description,
+            requirement,
+            address1,
+            address2,
+            address3,
+            date,
+            salary1,
+            salary2,
+            education,
+            category,
+            industry,
+            position,
+            uuid,
+            job_fair_id
+          )
+          values (
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            convert('[]', json)
+          )
+          """;
+      new QueryRunner().execute(conn, sql,
+          req.getEnterpriseId(),
+          req.getEnterpriseUuid(),
+          req.getName(),
+          req.getQty(),
+          req.getDescription(),
+          req.getRequirement(),
+          req.getAddress1(),
+          req.getAddress2(),
+          req.getAddress3(),
+          new SimpleDateFormat("yyyy-MM-dd").format(new Date()),
+          req.getSalary1(),
+          req.getSalary2(),
+          req.getEducation(),
+          req.getCategory(),
+          req.getIndustry(),
+          req.getPosition(),
+          uuid);
     } catch (Exception e) {
       logger.error("", e);
       resp.put("message", "gRPC服务器错误");
@@ -224,6 +256,29 @@ public class JobServiceImpl extends JobGrpc.JobImplBase {
             update recruitment set date_refresh = now() where id = ?
             """;
         new QueryRunner().execute(cnx, sql, Integer.parseInt(req.getDataMap().get("id")));
+      } else if ("save-fair-by-employer".equals(req.getOption())) {
+        String sql = """
+            update recruitment
+            set job_fair_id = json_array_append(job_fair_id, '$', ?)
+            where enterprise_id = ?
+              and id in (%s)
+            """;
+        sql = String.format(sql, req.getDataMap().get("list"));
+        new QueryRunner().execute(cnx, sql,
+            req.getDataMap().get("fair_id"),
+            req.getDataMap().get("employer_id"));
+      } else if ("remove-fair-by-employer".equals(req.getOption())) {
+        String sql = """
+            update recruitment
+            set job_fair_id = json_remove(job_fair_id,
+                json_unquote(json_search(job_fair_id, 'one', ?)))
+            where enterprise_id = ?
+              and id in (?)
+            """;
+        sql = String.format(sql, req.getDataMap().get("list"));
+        new QueryRunner().execute(cnx, sql,
+            req.getDataMap().get("fair_id"),
+            req.getDataMap().get("employer_id"));
       }
     } catch (Exception e) {
       logger.error("", e);

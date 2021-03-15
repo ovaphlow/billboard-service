@@ -228,7 +228,7 @@ public class JobServiceImpl extends JobGrpc.JobImplBase {
             req.getDataMap().get("name"),
             req.getDataMap().get("qty"),
             req.getDataMap().get("description"),
-            req.getDataMap().get("recruitment"),
+            req.getDataMap().get("requirement"),
             req.getDataMap().get("address1"),
             req.getDataMap().get("address2"),
             req.getDataMap().get("address3"),

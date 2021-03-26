@@ -508,15 +508,22 @@ public class EmployerServiceImpl extends EmployerGrpc.EmployerImplBase {
     resp.put("content", "");
     try (Connection conn = Persistence.getConn()) {
       List<Map<String, Object>> result = new ArrayList<>();
-      String sql = "select * from captcha where user_category=? and code=? and email=? "
-          + "and str_to_date(datime,'%Y-%m-%d %H:%i:%s') >= now()-interval 10 minute ORDER BY datime DESC limit 1";
+      String sql = """
+          select *
+          from captcha
+          where user_category = ?
+            and code = ?
+            and email = ?
+            and str_to_date(datime, '%Y-%m-%d %H:%i:%s') >= now() - interval 20 minute
+          ORDER BY datime DESC
+          limit 1
+          """;
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, req.getUserCategory());
         ps.setString(2, req.getCode());
         ps.setString(3, req.getEmail());
         ResultSet rs = ps.executeQuery();
         result = Persistence.getList(rs);
-        logger.info("{}", result);
       }
       Map<String, String> err = new HashMap<>();
       if (result.size() == 0) {
@@ -527,7 +534,6 @@ public class EmployerServiceImpl extends EmployerGrpc.EmployerImplBase {
           ps.setString(1, req.getEmail());
           ResultSet rs = ps.executeQuery();
           result = Persistence.getList(rs);
-          logger.info("{}", result);
         }
         sql = "delete from captcha where user_category=? and code=? and email=? ";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {

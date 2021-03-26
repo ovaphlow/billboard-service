@@ -516,6 +516,7 @@ public class EmployerServiceImpl extends EmployerGrpc.EmployerImplBase {
         ps.setString(3, req.getEmail());
         ResultSet rs = ps.executeQuery();
         result = Persistence.getList(rs);
+        logger.info("{}", result);
       }
       Map<String, String> err = new HashMap<>();
       if (result.size() == 0) {
@@ -526,6 +527,7 @@ public class EmployerServiceImpl extends EmployerGrpc.EmployerImplBase {
           ps.setString(1, req.getEmail());
           ResultSet rs = ps.executeQuery();
           result = Persistence.getList(rs);
+          logger.info("{}", result);
         }
         sql = "delete from captcha where user_category=? and code=? and email=? ";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {

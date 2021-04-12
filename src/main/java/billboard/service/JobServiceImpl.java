@@ -319,56 +319,114 @@ public class JobServiceImpl extends JobGrpc.JobImplBase {
 
   @Override
   public void enterpriseSearch(JobEnterpriseSearchRequest req, StreamObserver<BizReply> responseObserver) {
-    Gson gson = new Gson();
-    Map<String, Object> resp = new HashMap<>();
-    resp.put("message", "");
-    resp.put("content", "");
-    try (Connection conn = Persistence.getConn()) {
-      String sql = "select id, enterprise_id, enterprise_uuid, name, qty, address1, address2, address3, " +
-          "date, salary1, salary2, education, category, status, industry, position, uuid, job_fair_id, " +
-          "(select count(*) from browse_journal where data_id = recruitment.id and data_uuid = recruitment.uuid) as journal, " +
-          "(select count(*) from delivery where recruitment_id = recruitment.id and recruitment_uuid = recruitment.uuid) as delivery " +
-          "from recruitment " +
-          "where enterprise_id = ? and enterprise_uuid = ?";
-      List<String> list = new ArrayList<>();
-      list.add(req.getEnterpriseId());
-      list.add(req.getUuid());
-      if (req.getName() != null && !"".equals(req.getName())) {
-        sql += " and name = ? ";
-        list.add(req.getName());
-      }
-      if (req.getCategory() != null && !"".equals(req.getCategory())) {
-        sql += " and category = ? ";
-        list.add(req.getCategory());
-      }
-      if (req.getDate() != null && !"".equals(req.getDate())) {
-        sql += " and date = ? ";
-        list.add(req.getDate());
-      }
-      if (req.getStatus() != null && !"".equals(req.getStatus())) {
-        sql += " and status = ? ";
-        list.add(req.getStatus());
-      }
-      if (req.getEducation() != null && !"".equals(req.getEducation())) {
-        sql += " and education = ? ";
-        list.add(req.getEducation());
-      }
-      sql += " ORDER BY date DESC";
-      try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        for (int inx = 0; inx < list.size(); inx++) {
-          ps.setString(inx + 1, list.get(inx));
-        }
-        ResultSet rs = ps.executeQuery();
-        List<Map<String, Object>> result = Persistence.getList(rs);
-        resp.put("content", result);
-      }
+    String resp = "[]";
+    try (Connection cnx = Persistence.getConn()) {
+      String sql = """
+          select id
+            , uuid
+            , enterprise_id
+            , enterprise_uuid
+            , name
+            , qty
+            , address1
+            , address2
+            , address3
+            , date
+            , salary1
+            , salary2
+            , education
+            , category
+            , status
+            , industry
+            , position
+            , job_fair_id
+            , (
+              select count(*)
+              from browse_journal
+              where data_id = recruitment.id
+                and data_uuid = recruitment.uuid
+            ) as journal
+            , (
+              select count(*)
+              from delivery
+              where recruitment_id = recruitment.id
+                and recruitment_uuid = recruitment.uuid
+            ) as delivery
+          from recruitment
+          where enterprise_id = ?
+            and enterprise_uuid = ?
+            and position(? in name) > 0
+            and position(? in category) > 0
+            and position(? in date) > 0
+            and position(? in status) > 0
+            and position(? in education) > 0
+          order by date desc
+          """;
+      List<Map<String, Object>> result = new QueryRunner().query(cnx, sql, new MapListHandler(),
+          req.getEnterpriseId(),
+          req.getUuid(),
+          req.getName(),
+          req.getCategory(),
+          req.getDate(),
+          req.getStatus(),
+          req.getEducation());
+      resp = new Gson().toJson(result);
     } catch (Exception e) {
       logger.error("", e);
-      resp.put("message", "gRPC服务器错误");
     }
-    BizReply reply = BizReply.newBuilder().setData(gson.toJson(resp)).build();
+    BizReply reply = BizReply.newBuilder().setData(resp).build();
     responseObserver.onNext(reply);
     responseObserver.onCompleted();
+    // Gson gson = new Gson();
+    // Map<String, Object> resp = new HashMap<>();
+    // resp.put("message", "");
+    // resp.put("content", "");
+    // try (Connection conn = Persistence.getConn()) {
+    //   String sql = "select id, enterprise_id, enterprise_uuid, name, qty, address1, address2, address3, " +
+    //       "date, salary1, salary2, education, category, status, industry, position, uuid, job_fair_id, " +
+    //       "(select count(*) from browse_journal where data_id = recruitment.id and data_uuid = recruitment.uuid) as journal, " +
+    //       "(select count(*) from delivery where recruitment_id = recruitment.id and recruitment_uuid = recruitment.uuid) as delivery " +
+    //       "from recruitment " +
+    //       "where enterprise_id = ? and enterprise_uuid = ?";
+    //   List<String> list = new ArrayList<>();
+    //   list.add(req.getEnterpriseId());
+    //   list.add(req.getUuid());
+    //   if (req.getName() != null && !"".equals(req.getName())) {
+    //     sql += " and name = ? ";
+    //     list.add(req.getName());
+    //   }
+    //   if (req.getCategory() != null && !"".equals(req.getCategory())) {
+    //     sql += " and category = ? ";
+    //     list.add(req.getCategory());
+    //   }
+    //   if (req.getDate() != null && !"".equals(req.getDate())) {
+    //     sql += " and date = ? ";
+    //     list.add(req.getDate());
+    //   }
+    //   if (req.getStatus() != null && !"".equals(req.getStatus())) {
+    //     sql += " and status = ? ";
+    //     list.add(req.getStatus());
+    //   }
+    //   if (req.getEducation() != null && !"".equals(req.getEducation())) {
+    //     sql += " and education = ? ";
+    //     list.add(req.getEducation());
+    //   }
+    //   sql += " ORDER BY date DESC";
+    //   try (PreparedStatement ps = conn.prepareStatement(sql)) {
+    //     for (int inx = 0; inx < list.size(); inx++) {
+    //       ps.setString(inx + 1, list.get(inx));
+    //     }
+    //     ResultSet rs = ps.executeQuery();
+    //     List<Map<String, Object>> result = Persistence.getList(rs);
+    //     resp.put("content", result);
+    //   }
+    // } catch (Exception e) {
+    //   logger.error("", e);
+    //   resp.put("message", "gRPC服务器错误");
+    // }
+    // BizReply reply = BizReply.newBuilder().setData(gson.toJson(resp)).build();
+    // responseObserver.onNext(reply);
+    // responseObserver.onCompleted();
   }
 
   @Override

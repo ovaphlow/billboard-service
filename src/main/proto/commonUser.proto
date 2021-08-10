@@ -7,30 +7,26 @@ option java_outer_classname = "CommonUserProto";
 package commonUser;
 
 service CommonUser {
-
+  rpc review(ReviewRequest) returns (Reply) {}
   rpc get(GetRequest) returns (Reply) {}
-
   rpc signIn(SignInRequest) returns (Reply) {}
-
   rpc logIn(LogInRequest) returns (Reply) {}
-
   rpc update(UpdateRequest) returns (Reply) {}
-
   rpc phone(PhoneRequest) returns (Reply) {}
-
   rpc journal(JournalRequest) returns (Reply) {}
-
   rpc recover(RecoverRequest) returns (Reply) {}
-
   rpc checkEmail (CheckEmailRequest) returns (Reply) {}
-
   rpc checkRecover (CheckRecoverRequest) returns (Reply) {}
-
   rpc checkPassword (CheckPasswordRequest) returns (Reply) {}
-
   rpc checkCaptcha (CheckCaptchaRequest) returns (Reply) {}
-
   rpc updatePassword (UpdatePasswordRequest) returns (Reply) {}
+}
+
+message ReviewRequest {
+  uint32 id = 1;
+  string uuid = 2;
+  string option = 3;
+  map<string, string> data = 4;
 }
 
 message GetRequest {
@@ -52,6 +48,7 @@ message LogInRequest {
   string password = 2;
   string ip = 3;
   string address = 4;
+  string wx_openid = 5;
 }
 
 message UpdateRequest {

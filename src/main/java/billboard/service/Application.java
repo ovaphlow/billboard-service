@@ -2,7 +2,6 @@ package billboard.service;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-import kotlin.Suppress;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -51,7 +50,7 @@ public class Application {
         .addService(new HypervisorStaffServiceImpl())
         .build()
         .start();
-    logger.info("服务启动于端口 " + port);
+    logger.info("gRPC daemon running on port " + port);
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       System.err.println("*** shutting down gRPC server since JVM is shutting down");
       Application.this.stop();

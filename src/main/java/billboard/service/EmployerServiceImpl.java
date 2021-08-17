@@ -475,8 +475,8 @@ public class EmployerServiceImpl extends EmployerGrpc.EmployerImplBase {
     resp.put("message", "");
     resp.put("content", "");
     try (Connection conn = Persistence.getConn()) {
-      List<Map<String, Object>> result = new ArrayList<>();
-      String sql = "select * from enterprise_user where  id = ? and uuid = ?";
+      List<Map<String, Object>> result;
+      String sql = "select * from enterprise_user where id = ? and uuid = ?";
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, req.getId());
         ps.setString(2, req.getUuid());

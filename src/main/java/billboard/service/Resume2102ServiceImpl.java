@@ -84,7 +84,8 @@ public class Resume2102ServiceImpl extends Resume2102Grpc.Resume2102ImplBase {
         resp = new Gson().toJson(result);
       } else if ("by-user".equals(req.getOption())) {
         String sql = """
-            select *
+            select *,
+              (select wx_openid from common_user cu where id = 5438) as wx_openid
             from resume
             where common_user_id = ?
               and (select uuid from common_user where id = common_user_id) = ?
